@@ -3,13 +3,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
  * StoreController manages the customer shopping experience.
  * Coordinates between product browsing, cart, and checkout views.
+ * Updated to use ConvenienceStoreView with navigation.
  *
  * @author Dana Ysabelle A. Pelagio
  */
@@ -18,8 +17,15 @@ public class StoreController {
     private ConvenienceStore store;
     private Customer customer;
     private DataPersistence dataPersistence;
+    private ProductDataManager productDataManager;
     
-    private Scene shoppingScene;
+    private Scene storeScene;
+    private Scene cartScene;
+    private Scene checkoutScene;
+    
+    private ConvenienceStoreView storeView;
+    private CartView cartView;
+    private CheckoutView checkoutView;
     
     /**
      * Constructs a StoreController.
@@ -35,179 +41,81 @@ public class StoreController {
         this.store = store;
         this.customer = customer;
         this.dataPersistence = dataPersistence;
+        this.productDataManager = new ProductDataManager();
+        
+        // Set stage to maximized
+        primaryStage.setMaximized(true);
     }
     
     /**
-     * Shows the main shopping view.
+     * Shows the main shopping view (ConvenienceStoreView).
      */
     public void showShoppingView() {
-        BorderPane mainLayout = new BorderPane();
+        storeView = new ConvenienceStoreView(store, customer, this);
+        storeScene = new Scene(storeView);
         
-        // Top bar
-        HBox topBar = createTopBar();
-        mainLayout.setTop(topBar);
+        primaryStage.setScene(storeScene);
+        primaryStage.setTitle("11-Seven - Shopping");
+    }
+    
+    /**
+     * Shows the cart view.
+     */
+    public void showCartView() {
+        if (customer.getCart().isEmpty()) {
+            showAlert("Empty Cart", "Your cart is empty. Add some items first!", Alert.AlertType.WARNING);
+            return;
+        }
         
-        // Center: Product selection
-        VBox centerPanel = createProductSelectionPanel();
-        
-        // Right: Cart view
-        CartView cartView = new CartView(customer.getCart());
+        cartView = new CartView(customer.getCart());
         
         // Override checkout button
         cartView.getCheckoutButton().setOnAction(e -> {
-            if (customer.getCart().isEmpty()) {
-                showAlert("Empty Cart", "Please add items to cart first.", Alert.AlertType.WARNING);
-                return;
-            }
-            showCheckoutView(cartView);
+            showCheckoutView();
         });
         
-        // Split pane
-        SplitPane splitPane = new SplitPane(centerPanel, cartView);
-        splitPane.setDividerPositions(0.6);
-        mainLayout.setCenter(splitPane);
-        
-        shoppingScene = new Scene(mainLayout, 1200, 700);
-        primaryStage.setScene(shoppingScene);
-        primaryStage.setTitle("Shopping - " + customer.getName());
-    }
-    
-    /**
-     * Creates the top bar with store and user info.
-     */
-    private HBox createTopBar() {
-        HBox topBar = new HBox(20);
-        topBar.setPadding(new Insets(15));
-        topBar.setStyle("-fx-background-color: #4CAF50;");
-        topBar.setAlignment(Pos.CENTER_LEFT);
-        
-        Label storeLabel = new Label("🏪 " + store.getName() + " - " + store.getLocation());
-        storeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-        storeLabel.setStyle("-fx-text-fill: white;");
-        
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        
-        Label customerLabel = new Label("👤 " + customer.getName());
-        customerLabel.setFont(Font.font("Arial", 16));
-        customerLabel.setStyle("-fx-text-fill: white;");
-        
-        Button logoutButton = new Button("Logout");
-        logoutButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
-        logoutButton.setOnAction(e -> handleLogout());
-        
-        topBar.getChildren().add(storeLabel);
-        topBar.getChildren().add(spacer);
-        topBar.getChildren().add(customerLabel);
-        
-        if (customer.hasMembershipCard()) {
-            Label memberLabel = new Label("⭐ " + customer.getMembershipCard().getPoints() + " pts");
-            memberLabel.setFont(Font.font("Arial", 14));
-            memberLabel.setStyle("-fx-text-fill: #FFD700;");
-            topBar.getChildren().add(memberLabel);
-        }
-        
-        topBar.getChildren().add(logoutButton);
-        
-        return topBar;
-    }
-    
-    /**
-     * Creates the product selection panel.
-     */
-    private VBox createProductSelectionPanel() {
-        VBox productPanel = new VBox(15);
-        productPanel.setPadding(new Insets(20));
-        
-        Label titleLabel = new Label("Available Products");
-        titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        
-        GridPane productGrid = new GridPane();
-        productGrid.setHgap(15);
-        productGrid.setVgap(15);
-        
-        int row = 0, col = 0;
-        for (Product product : store.getInventory().getProducts()) {
-            VBox productBox = createProductBox(product);
-            productGrid.add(productBox, col, row);
-            
-            col++;
-            if (col >= 3) {
-                col = 0;
-                row++;
-            }
-        }
-        
-        ScrollPane scrollPane = new ScrollPane(productGrid);
-        scrollPane.setFitToWidth(true);
-        
-        productPanel.getChildren().addAll(titleLabel, scrollPane);
-        return productPanel;
-    }
-    
-    /**
-     * Creates a product display box.
-     */
-    private VBox createProductBox(Product product) {
-        VBox box = new VBox(8);
-        box.setPadding(new Insets(15));
-        box.setStyle("-fx-border-color: #ddd; -fx-border-width: 2; -fx-background-color: white;");
-        box.setAlignment(Pos.CENTER);
-        box.setPrefWidth(180);
-        
-        Label nameLabel = new Label(product.getName());
-        nameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        nameLabel.setWrapText(true);
-        nameLabel.setAlignment(Pos.CENTER);
-        
-        Label priceLabel = new Label(String.format("₱%.2f", product.getPrice()));
-        priceLabel.setFont(Font.font("Arial", 16));
-        priceLabel.setStyle("-fx-text-fill: #4CAF50;");
-        
-        Label stockLabel = new Label("Stock: " + product.getStock());
-        stockLabel.setFont(Font.font("Arial", 12));
-        
-        Spinner<Integer> qtySpinner = new Spinner<>(1, product.getStock(), 1);
-        qtySpinner.setPrefWidth(80);
-        
-        Button addButton = new Button("Add to Cart");
-        addButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
-        addButton.setPrefWidth(150);
-        
-        addButton.setOnAction(e -> {
-            int qty = qtySpinner.getValue();
-            customer.addToCart(product, qty);
-            showAlert("Added to Cart", 
-                     String.format("Added %dx %s", qty, product.getName()),
-                     Alert.AlertType.INFORMATION);
-            showShoppingView(); // Refresh
+        // Add back button to cart view
+        Button backButton = new Button("← Back to Store");
+        backButton.setStyle("-fx-font-size: 14px;");
+        backButton.setOnAction(e -> {
+            showShoppingView();
+            storeView.updateCartCount();
         });
         
-        box.getChildren().addAll(nameLabel, priceLabel, stockLabel, qtySpinner, addButton);
-        return box;
+        BorderPane cartLayout = new BorderPane();
+        cartLayout.setCenter(cartView);
+        
+        HBox bottomBox = new HBox(backButton);
+        bottomBox.setPadding(new Insets(15));
+        bottomBox.setAlignment(Pos.CENTER_LEFT);
+        cartLayout.setBottom(bottomBox);
+        
+        cartScene = new Scene(cartLayout);
+        primaryStage.setScene(cartScene);
+        primaryStage.setTitle("Shopping Cart");
     }
     
     /**
      * Shows the checkout view.
      */
-    private void showCheckoutView(CartView previousCartView) {
-        CheckoutView checkoutView = new CheckoutView(customer, customer.getCart());
+    public void showCheckoutView() {
+        checkoutView = new CheckoutView(customer, customer.getCart());
         
-        checkoutView.getBackButton().setOnAction(e -> showShoppingView());
+        checkoutView.getBackButton().setOnAction(e -> showCartView());
         
         checkoutView.getProcessPaymentButton().setOnAction(e -> {
-            processCheckout(checkoutView);
+            processCheckout();
         });
         
-        Scene checkoutScene = new Scene(checkoutView, 1000, 700);
+        checkoutScene = new Scene(checkoutView);
         primaryStage.setScene(checkoutScene);
-        primaryStage.setTitle("Checkout - " + customer.getName());
+        primaryStage.setTitle("Checkout");
     }
     
     /**
      * Processes checkout and shows receipt.
      */
-    private void processCheckout(CheckoutView checkoutView) {
+    private void processCheckout() {
         try {
             String amountText = checkoutView.getAmountReceived();
             if (amountText == null || amountText.trim().isEmpty()) {
@@ -252,8 +160,8 @@ public class StoreController {
                 card.addPoints(total);
             }
             
-            // Save customer data
-            // Note: You'll need to track username separately or modify Customer class
+            // Update product stock in file
+            productDataManager.saveProducts(store.getInventory().getProducts());
             
             // Generate receipt
             Receipt receipt = transaction.generateReceipt();
@@ -264,8 +172,9 @@ public class StoreController {
                      String.format("Change: ₱%.2f\nThank you for shopping!", payment.computeChange()),
                      Alert.AlertType.INFORMATION);
             
-            // Return to shopping
+            // Return to store view
             showShoppingView();
+            storeView.refresh();
             
         } catch (NumberFormatException ex) {
             showAlert("Invalid Input", "Please enter a valid amount.", Alert.AlertType.ERROR);
@@ -275,32 +184,29 @@ public class StoreController {
     /**
      * Handles logout.
      */
-    private void handleLogout() {
+    public void handleLogout() {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Logout");
         confirm.setHeaderText("Logout Confirmation");
-        confirm.setContentText("Are you sure you want to logout?");
+        confirm.setContentText("Are you sure you want to logout?\nYour cart will be cleared.");
         
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                // Return to login through MainApplication
-                // This requires MainApplication reference
-                loginView();
+                // Clear cart and return to login
+                customer.getCart().clear();
+                
+                // Navigate back to login
+                LoginController loginController = new LoginController(null);
+                LoginView loginView = new LoginView(loginController);
+                
+                Scene loginScene = new Scene(loginView);
+                primaryStage.setScene(loginScene);
+                primaryStage.setTitle("Login - Convenience Store");
+                primaryStage.setMaximized(false);
+                primaryStage.setWidth(800);
+                primaryStage.setHeight(700);
             }
         });
-    }
-    
-    /**
-     * Returns to login view.
-     */
-    private void loginView() {
-        // Recreate login view
-        LoginController loginController = new LoginController(null);
-        LoginView loginView = new LoginView(loginController);
-        
-        Scene loginScene = new Scene(loginView, 800, 700);
-        primaryStage.setScene(loginScene);
-        primaryStage.setTitle("Login - Convenience Store");
     }
     
     /**

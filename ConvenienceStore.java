@@ -40,6 +40,15 @@ public class ConvenienceStore {
     }
 
     /**
+     * Returns the sales history list.
+     *
+     * @return The ArrayList of transactions.
+     */
+    public ArrayList<Transaction> getSalesHistory() {
+        return salesHistory;
+    }
+
+    /**
      * Displays the current state of the store's inventory, organized by shelf.
      */
     public void displayInventory() {
@@ -71,5 +80,32 @@ public class ConvenienceStore {
      */
     public String getLocation() {
         return location;
+    }
+
+    /**
+     * Sets the name of the store.
+     *
+     * @param name The new name.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Sets the location of the store.
+     *
+     * @param location The new location.
+     */
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    /**
+     * Sets the inventory of the store.
+     *
+     * @param inventory The new inventory.
+     */
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 }
