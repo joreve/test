@@ -39,10 +39,9 @@ public class MainApplication extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Convenience Store Management System");
-        primaryStage.setWidth(1920);
-        primaryStage.setHeight(1080);
-        primaryStage.setMinWidth(1280);
-        primaryStage.setMinHeight(720);
+        
+        primaryStage.setWidth(1280);
+        primaryStage.setHeight(720);
         primaryStage.setResizable(true);
 
         dataManager = new DataManager();
