@@ -1,0 +1,250 @@
+101|||Talong|||45.0|||50|||Food|||Vegetables|||Baguio|||Fresh|||2025-12-10
+102|||Broccoli|||60.0|||40|||Food|||Vegetables|||Local|||Fresh|||2025-12-05
+103|||Sitaw|||35.0|||60|||Food|||Vegetables|||Local|||Long|||2025-12-07
+104|||Kalabasa|||30.0|||55|||Food|||Vegetables|||Local|||Sweet|||2025-12-15
+105|||Okra|||40.0|||50|||Food|||Vegetables|||Local|||Fresh|||2025-12-06
+106|||Repolyo|||50.0|||45|||Food|||Vegetables|||Benguet|||Green|||2025-12-12
+107|||Kamatis|||25.0|||70|||Food|||Vegetables|||Local|||Red|||2025-12-03
+108|||Patatas|||70.0|||40|||Food|||Vegetables|||Benguet|||White|||2026-01-05
+109|||Luya|||90.0|||30|||Food|||Vegetables|||Local|||Root|||2026-02-01
+110|||Malunggay Leaves|||10.0|||80|||Food|||Vegetables|||Local|||Bundle|||2025-12-02
+201|||Banana|||40.0|||60|||Food|||Fruits|||Dole|||Lakatan|||2025-12-08
+202|||Mango|||120.0|||40|||Food|||Fruits|||Guimaras|||Ripe|||2025-12-05
+203|||Apple|||35.0|||50|||Food|||Fruits|||Imported|||Red|||2026-01-10
+204|||Orange|||30.0|||45|||Food|||Fruits|||Local|||Sweet|||2026-01-12
+205|||Papaya|||55.0|||35|||Food|||Fruits|||Local|||Ripe|||2025-12-07
+206|||Pineapple|||90.0|||25|||Food|||Fruits|||DelMonte|||Whole|||2025-12-20
+207|||Watermelon|||150.0|||20|||Food|||Fruits|||Local|||Large|||2025-12-18
+208|||Grapes|||180.0|||25|||Food|||Fruits|||Imported|||Seedless|||2025-12-22
+209|||Lemon|||20.0|||40|||Food|||Fruits|||Imported|||Yellow|||2026-01-12
+210|||Strawberry|||200.0|||15|||Food|||Fruits|||Baguio|||Fresh|||2025-12-03
+301|||Pandesal|||3.0|||200|||Food|||Baked Goods|||Local Bakery|||Classic|||2025-11-30
+302|||Ensaymada|||25.0|||60|||Food|||Baked Goods|||Red Ribbon|||Butter|||2025-12-02
+303|||Spanish Bread|||10.0|||100|||Food|||Baked Goods|||Local Bakery|||Sweet|||2025-12-03
+304|||Cheesecake Slice|||120.0|||20|||Food|||Baked Goods|||Goldilocks|||Classic|||2025-12-05
+305|||Chocolate Cake Slice|||95.0|||25|||Food|||Baked Goods|||Goldilocks|||Moist|||2025-12-04
+306|||Banana Bread|||70.0|||30|||Food|||Baked Goods|||HomeMade|||Loaf|||2025-12-10
+307|||Donut|||25.0|||50|||Food|||Baked Goods|||Dunkin|||Chocolate|||2025-12-07
+308|||Hopia Ube|||50.0|||40|||Food|||Baked Goods|||Eng Bee Tin|||Ube|||2026-01-15
+309|||Mamon|||20.0|||60|||Food|||Baked Goods|||Red Ribbon|||Butter|||2025-12-03
+310|||Baguette|||90.0|||20|||Food|||Baked Goods|||French Bakery|||Classic|||2025-12-06
+401|||Bangus|||180.0|||30|||Food|||Seafood|||Dagupan|||Fresh|||2025-12-02
+402|||Tilapia|||120.0|||35|||Food|||Seafood|||Local|||Whole|||2025-12-01
+403|||Shrimp|||350.0|||20|||Food|||Seafood|||Local|||Medium|||2025-12-03
+404|||Crab|||450.0|||15|||Food|||Seafood|||Local|||Live|||2025-12-02
+405|||Tuna Fillet|||300.0|||20|||Food|||Seafood|||GenSan|||Fresh|||2025-12-04
+406|||Salmon Fillet|||550.0|||10|||Food|||Seafood|||Imported|||Fresh|||2025-12-05
+407|||Squid|||250.0|||25|||Food|||Seafood|||Local|||Medium|||2025-12-03
+408|||Sardines Fresh|||140.0|||25|||Food|||Seafood|||Local|||Fresh|||2025-12-02
+409|||Lapu-Lapu|||400.0|||12|||Food|||Seafood|||Local|||Whole|||2025-12-01
+410|||Hito|||150.0|||18|||Food|||Seafood|||Local|||Fresh|||2025-12-02
+501|||Piattos|||20.0|||80|||Food|||Snacks|||Jack n Jill|||Cheese|||2026-05-10
+502|||Chippy|||18.0|||90|||Food|||Snacks|||Jack n Jill|||BBQ|||2026-04-12
+503|||Nova|||22.0|||70|||Food|||Snacks|||Jack n Jill|||Cheese|||2026-03-25
+504|||Clover Chips|||18.0|||80|||Food|||Snacks|||Leslies|||Cheese|||2026-05-30
+505|||Roller Coaster|||20.0|||85|||Food|||Snacks|||Jack n Jill|||Cheddar|||2026-06-01
+506|||Boy Bawang|||12.0|||100|||Food|||Snacks|||KSK|||Garlic|||2026-08-01
+507|||Ding Dong|||25.0|||60|||Food|||Snacks|||JBC|||Mixed Nuts|||2026-06-10
+508|||Martys Cracklin|||20.0|||75|||Food|||Snacks|||Oishi|||Salt & Pepper|||2026-07-02
+509|||Oishi Prawn Crackers|||18.0|||90|||Food|||Snacks|||Oishi|||Regular|||2026-06-18
+510|||SkyFlakes|||16.0|||95|||Food|||Snacks|||Monde|||Original|||2026-09-30
+601|||Mango Juice|||30.0|||60|||Beverages|||Juice|||Locally|||Tetra Pack|||2026-02-01
+602|||Pineapple Juice|||28.0|||55|||Beverages|||Juice|||Del Monte|||Tetra Pack|||2026-03-01
+603|||Apple Juice|||25.0|||50|||Beverages|||Juice|||Minute Maid|||Bottle|||2026-04-01
+604|||Orange Juice|||30.0|||45|||Beverages|||Juice|||Tropicana|||Bottle|||2026-02-20
+605|||Grape Juice|||35.0|||40|||Beverages|||Juice|||Welch|||Bottle|||2026-05-05
+606|||Calamansi Juice|||20.0|||60|||Beverages|||Juice|||Local|||Fresh|||2025-12-05
+607|||Guyabano Juice|||32.0|||40|||Beverages|||Juice|||Locally|||Tetra Pack|||2026-01-15
+608|||Buko Juice|||25.0|||50|||Beverages|||Juice|||Local|||Fresh|||2025-11-30
+609|||Four Seasons|||30.0|||35|||Beverages|||Juice|||Del Monte|||Can|||2026-06-02
+610|||Strawberry Juice|||35.0|||30|||Beverages|||Juice|||Imported|||Bottle|||2026-05-20
+701|||Coke|||20.0|||80|||Beverages|||Soda|||Coca-Cola|||Regular|||2026-12-31
+702|||Sprite|||20.0|||70|||Beverages|||Soda|||Coca-Cola|||Regular|||2026-12-31
+703|||Royal Orange|||20.0|||65|||Beverages|||Soda|||Coca-Cola|||Orange|||2026-12-31
+704|||Pepsi|||18.0|||60|||Beverages|||Soda|||PepsiCo|||Regular|||2026-10-20
+705|||Mountain Dew|||20.0|||55|||Beverages|||Soda|||PepsiCo|||Regular|||2026-10-20
+706|||7-Up|||20.0|||50|||Beverages|||Soda|||PepsiCo|||Regular|||2026-11-11
+707|||Root Beer|||22.0|||40|||Beverages|||Soda|||A&W|||Classic|||2027-01-01
+708|||Sarsi|||20.0|||45|||Beverages|||Soda|||ARC|||Classic|||2026-12-25
+709|||Coke Zero|||22.0|||55|||Beverages|||Soda|||Coca-Cola|||Zero Sugar|||2026-12-31
+710|||Pepsi Max|||22.0|||50|||Beverages|||Soda|||PepsiCo|||Zero Sugar|||2026-11-30
+801|||Green Tea|||15.0|||60|||Beverages|||Tea|||Lipton|||Hot|||2027-01-01
+802|||Milk Tea (Classic)|||85.0|||30|||Beverages|||Tea|||Local Cafe|||Classic|||2025-12-01
+803|||Thai Milk Tea|||90.0|||25|||Beverages|||Tea|||Local Cafe|||Thai|||2025-12-03
+804|||Black Tea|||18.0|||50|||Beverages|||Tea|||Lipton|||Bag|||2027-02-10
+805|||Barley Tea|||25.0|||45|||Beverages|||Tea|||Imported|||Bag|||2027-03-12
+806|||Chamomile Tea|||20.0|||40|||Beverages|||Tea|||Twinings|||Bag|||2027-02-05
+807|||Oolong Tea|||22.0|||35|||Beverages|||Tea|||Twinings|||Bag|||2027-03-01
+808|||Red Tea|||18.0|||50|||Beverages|||Tea|||Local|||Loose Leaf|||2026-12-20
+809|||Matcha Drink|||95.0|||20|||Beverages|||Tea|||Ito En|||Bottle|||2026-09-10
+810|||Herbal Tea Mix|||30.0|||30|||Beverages|||Tea|||Local|||Mixed|||2027-01-15
+901|||San Miguel Pale Pilsen|||55.0|||70|||Beverages|||Alcohol|||SMB|||Bottle|||2027-05-01
+902|||Red Horse|||65.0|||60|||Beverages|||Alcohol|||SMB|||Bottle|||2027-05-01
+903|||Tanduay Rhum|||120.0|||40|||Beverages|||Alcohol|||Tanduay|||Dark|||2028-01-01
+904|||Emperador Light|||100.0|||45|||Beverages|||Alcohol|||Emperador|||Light|||2028-01-01
+905|||Smirnoff Vodka|||250.0|||25|||Beverages|||Alcohol|||Smirnoff|||Classic|||2029-01-01
+906|||Gilbey's Gin|||120.0|||35|||Beverages|||Alcohol|||Gilbeys|||Original|||2028-01-01
+907|||Fundador Brandy|||320.0|||20|||Beverages|||Alcohol|||Fundador|||Classic|||2028-02-15
+908|||The Bar Gin|||100.0|||30|||Beverages|||Alcohol|||The Bar|||Lime|||2028-01-10
+909|||Jack Daniel's|||750.0|||10|||Beverages|||Alcohol|||JD|||No. 7|||2030-01-01
+910|||Heineken|||70.0|||40|||Beverages|||Alcohol|||Heineken|||Bottle|||2027-06-12
+1001|||Wilkins|||20.0|||100|||Beverages|||Water|||Coca-Cola|||Purified|||2028-01-01
+1002|||Summit|||18.0|||90|||Beverages|||Water|||Summit|||Mineral|||2028-05-01
+1003|||Absolute|||20.0|||80|||Beverages|||Water|||Absolute|||Purified|||2028-03-01
+1004|||Nature Spring|||15.0|||110|||Beverages|||Water|||Nature Spring|||Regular|||2028-04-05
+1005|||Evian|||50.0|||40|||Beverages|||Water|||Evian|||Mineral|||2029-01-01
+1006|||Fiji Water|||70.0|||30|||Beverages|||Water|||Fiji|||Premium|||2029-05-01
+1007|||Gatorade|||35.0|||60|||Beverages|||Water|||PepsiCo|||Orange|||2027-12-10
+1008|||Pocari Sweat|||45.0|||50|||Beverages|||Water|||Otsuka|||Ion Drink|||2027-11-11
+1009|||C2 Water|||20.0|||70|||Beverages|||Water|||URC|||Lemon|||2027-10-01
+1010|||Longrich Alkaline Water|||55.0|||25|||Beverages|||Water|||Longrich|||Alkaline|||2028-02-12
+1101|||Creamsilk Conditioner|||130.0|||40|||Toiletries|||Hair Care|||Creamsilk|||Pink|||
+1102|||Pantene Shampoo|||150.0|||35|||Toiletries|||Hair Care|||Pantene|||Smooth & Silky|||
+1103|||Head & Shoulders|||160.0|||30|||Toiletries|||Hair Care|||H&S|||Cool Menthol|||
+1104|||Palmolive Shampoo|||120.0|||50|||Toiletries|||Hair Care|||Palmolive|||Aloe|||
+1105|||Sunsilk Shampoo|||115.0|||45|||Toiletries|||Hair Care|||Sunsilk|||Smooth|||
+1106|||Tresemme Conditioner|||250.0|||20|||Toiletries|||Hair Care|||Tresemme|||Keratin|||
+1107|||Dove Shampoo|||140.0|||35|||Toiletries|||Hair Care|||Dove|||Daily Moisture|||
+1108|||Garnier Serum|||220.0|||25|||Toiletries|||Hair Care|||Garnier|||Hair Repair|||
+1109|||Watsons Hair Wax|||70.0|||40|||Toiletries|||Hair Care|||Watsons|||Strong Hold|||
+1110|||Monea Curl Cream|||95.0|||30|||Toiletries|||Hair Care|||Monea|||Curl Defining|||
+1201|||Safeguard Soap|||35.0|||60|||Toiletries|||Body Care|||Safeguard|||Beige|||
+1202|||Dove Bar Soap|||70.0|||50|||Toiletries|||Body Care|||Dove|||White|||
+1203|||Belo Body Wash|||150.0|||30|||Toiletries|||Body Care|||Belo|||Whitening|||
+1204|||Nivea Body Lotion|||220.0|||25|||Toiletries|||Body Care|||Nivea|||Extra White|||
+1205|||Johnson’s Baby Powder|||60.0|||80|||Toiletries|||Body Care|||Johnson’s|||Pink|||
+1206|||Irish Spring Soap|||80.0|||40|||Toiletries|||Body Care|||Irish Spring|||Original|||
+1207|||Palmolive Body Wash|||120.0|||35|||Toiletries|||Body Care|||Palmolive|||Milk & Honey|||
+1208|||Aveeno Lotion|||350.0|||20|||Toiletries|||Body Care|||Aveeno|||Oat|||
+1209|||Rexona Deodorant|||110.0|||45|||Toiletries|||Body Care|||Rexona|||Powder Dry|||
+1210|||Old Spice Deodorant|||180.0|||25|||Toiletries|||Body Care|||Old Spice|||Classic|||
+1301|||Celeteque Toner|||150.0|||35|||Toiletries|||Skin Care|||Celeteque|||Hydration|||
+1302|||Ponds Facial Wash|||120.0|||40|||Toiletries|||Skin Care|||Ponds|||Brightening|||
+1303|||Garnier Micellar Water|||180.0|||30|||Toiletries|||Skin Care|||Garnier|||Cleansing|||
+1304|||Eskinol Facial Cleanser|||50.0|||60|||Toiletries|||Skin Care|||Eskinol|||Classic|||
+1305|||Olay Moisturizer|||350.0|||20|||Toiletries|||Skin Care|||Olay|||Regenerist|||
+1306|||Human Nature Toner|||180.0|||25|||Toiletries|||Skin Care|||Human Nature|||Natural|||
+1307|||Sunblock SPF50|||200.0|||35|||Toiletries|||Skin Care|||Belo|||SPF50|||
+1308|||Aloe Vera Gel|||180.0|||40|||Toiletries|||Skin Care|||Nature Republic|||Moisture|||
+1309|||Dr. Wong’s Soap|||50.0|||60|||Toiletries|||Skin Care|||Sulfur|||Anti-Acne|||
+1310|||Face Mask Sheet|||25.0|||100|||Toiletries|||Skin Care|||Mediheal|||Hydrating|||
+1401|||Colgate Toothpaste|||95.0|||60|||Toiletries|||Oral Hygiene|||Colgate|||Regular|||
+1402|||Close-Up Toothpaste|||90.0|||55|||Toiletries|||Oral Hygiene|||Close-Up|||Menthol|||
+1403|||Oral-B Toothbrush|||60.0|||50|||Toiletries|||Oral Hygiene|||Oral-B|||Soft|||
+1404|||Listerine Mouthwash|||120.0|||40|||Toiletries|||Oral Hygiene|||Listerine|||Cool Mint|||
+1405|||Dental Floss|||45.0|||35|||Toiletries|||Oral Hygiene|||Oral-B|||Mint|||
+1406|||Hapee Toothpaste|||55.0|||70|||Toiletries|||Oral Hygiene|||Hapee|||Mint|||
+1407|||Datu Puti Mouthwash|||35.0|||60|||Toiletries|||Oral Hygiene|||Local|||Herbal|||
+1408|||Charcoal Toothpaste|||120.0|||25|||Toiletries|||Oral Hygiene|||Activated|||Charcoal|||
+1409|||Kids Toothpaste|||70.0|||40|||Toiletries|||Oral Hygiene|||Colgate|||Strawberry|||
+1410|||Toothbrush (3 Pack)|||85.0|||30|||Toiletries|||Oral Hygiene|||Watsons|||Soft|||
+1501|||Axe Body Spray|||180.0|||40|||Toiletries|||Fragrance|||Axe|||Dark Temptation|||
+1502|||Bench Eight|||120.0|||50|||Toiletries|||Fragrance|||Bench|||8|||
+1503|||Penshoppe Body Mist|||150.0|||40|||Toiletries|||Fragrance|||Penshoppe|||Blush|||
+1504|||Victoria’s Secret Mist|||450.0|||25|||Toiletries|||Fragrance|||VS|||Love Spell|||
+1505|||Dior Sauvage|||5500.0|||5|||Toiletries|||Fragrance|||Dior|||EDT|||
+1506|||Blue Water Perfume|||200.0|||30|||Toiletries|||Fragrance|||Local|||Fresh|||
+1507|||Baby Cologne|||45.0|||60|||Toiletries|||Fragrance|||Johnson’s|||Morning Dew|||
+1508|||Charlie Perfume|||160.0|||35|||Toiletries|||Fragrance|||Revlon|||Silver|||
+1509|||Bulgari Omnia|||3500.0|||4|||Toiletries|||Fragrance|||Bvlgari|||Amethyste|||
+1510|||Aqua Cologne|||80.0|||50|||Toiletries|||Fragrance|||Watsons|||Ocean|||
+1601|||Scotch Brite Sponge|||35.0|||80|||Cleaning Products|||Cleaning Supplies|||3M|||Regular|||
+1602|||Microfiber Cloth|||50.0|||70|||Cleaning Products|||Cleaning Supplies|||3M|||Household|||
+1603|||Rubber Gloves|||60.0|||40|||Cleaning Products|||Cleaning Supplies|||Local|||Large|||
+1604|||Dish Brush|||45.0|||50|||Cleaning Products|||Cleaning Supplies|||Local|||Regular|||
+1605|||Steel Wool|||35.0|||60|||Cleaning Products|||Cleaning Supplies|||Local|||Bundle|||
+1606|||Cleaning Mop|||150.0|||30|||Cleaning Products|||Cleaning Supplies|||Local|||Twist Mop|||
+1607|||Broom Walis Tambo|||90.0|||40|||Cleaning Products|||Cleaning Supplies|||Local|||Standard|||
+1608|||Dustpan|||40.0|||50|||Cleaning Products|||Cleaning Supplies|||Local|||Plastic|||
+1609|||Scrubbing Brush|||35.0|||55|||Cleaning Products|||Cleaning Supplies|||Local|||Hard Bristles|||
+1610|||Spray Bottle|||25.0|||70|||Cleaning Products|||Cleaning Supplies|||Local|||Empty|||
+1701|||Lysol Spray|||250.0|||40|||Cleaning Products|||Disinfectant|||Lysol|||Crisp Linen|||
+1702|||Alcohol 70%|||90.0|||80|||Cleaning Products|||Disinfectant|||Green Cross|||70%|||
+1703|||Zonrox Bleach|||70.0|||70|||Cleaning Products|||Disinfectant|||Zonrox|||Original|||
+1704|||Dettol Liquid|||180.0|||30|||Cleaning Products|||Disinfectant|||Dettol|||Antiseptic|||
+1705|||Domex Cleaner|||120.0|||40|||Cleaning Products|||Disinfectant|||Domex|||Ultra Thick|||
+1706|||Hand Sanitizer|||50.0|||60|||Cleaning Products|||Disinfectant|||Watsons|||Gel|||
+1707|||Isopropyl Alcohol 70%|||95.0|||50|||Cleaning Products|||Disinfectant|||Biogenic|||70%|||
+1708|||Bleach Powder|||45.0|||55|||Cleaning Products|||Disinfectant|||Local|||Powder|||
+1709|||Disinfectant Wipes|||120.0|||30|||Cleaning Products|||Disinfectant|||Lysol|||Lemon|||
+1710|||Floor Disinfectant|||95.0|||40|||Cleaning Products|||Disinfectant|||Mr. Clean|||Lavender|||
+1801|||Dishwashing Liquid|||55.0|||80|||Cleaning Products|||Cleaning Agent|||Joy|||Lemon|||
+1802|||Laundry Stain Remover|||120.0|||40|||Cleaning Products|||Cleaning Agent|||Vanish|||Pink|||
+1803|||Toilet Bowl Cleaner|||90.0|||50|||Cleaning Products|||Cleaning Agent|||Domex|||Thick Bleach|||
+1804|||Glass Cleaner|||75.0|||45|||Cleaning Products|||Cleaning Agent|||Mr. Muscle|||Clear|||
+1805|||All-Purpose Cleaner|||95.0|||35|||Cleaning Products|||Cleaning Agent|||Mr. Clean|||Lemon|||
+1806|||Rust Remover|||110.0|||25|||Cleaning Products|||Cleaning Agent|||WD-40|||Liquid|||
+1807|||Kitchen Degreaser|||130.0|||30|||Cleaning Products|||Cleaning Agent|||Mr. Muscle|||Orange|||
+1808|||Tile Cleaner|||80.0|||40|||Cleaning Products|||Cleaning Agent|||Local|||Strong|||
+1809|||Car Shampoo|||150.0|||20|||Cleaning Products|||Cleaning Agent|||Microtex|||Wash|||
+1810|||Fabric Freshener Spray|||120.0|||25|||Cleaning Products|||Cleaning Agent|||Downy|||Mist|||
+1901|||Tide Powder|||120.0|||50|||Cleaning Products|||Detergent|||Tide|||Original|||
+1902|||Ariel Powder|||130.0|||45|||Cleaning Products|||Detergent|||Ariel|||Original|||
+1903|||Surf Powder|||100.0|||60|||Cleaning Products|||Detergent|||Surf|||Rose|||
+1904|||Downy Fabric Conditioner|||120.0|||55|||Cleaning Products|||Detergent|||Downy|||Sunrise Fresh|||
+1905|||Breeze Powder|||110.0|||50|||Cleaning Products|||Detergent|||Breeze|||Clean|||
+1906|||Pride Powder|||95.0|||40|||Cleaning Products|||Detergent|||Pride|||Blue|||
+1907|||Foca Detergent|||140.0|||30|||Cleaning Products|||Detergent|||Foca|||Original|||
+1908|||Champion Detergent|||95.0|||45|||Cleaning Products|||Detergent|||Champion|||Blue|||
+1909|||Liquid Detergent|||120.0|||35|||Cleaning Products|||Detergent|||Local|||Regular|||
+1910|||Woolite|||180.0|||20|||Cleaning Products|||Detergent|||Woolite|||Dark|||
+2001|||Glade Gel|||85.0|||40|||Cleaning Products|||Air Freshener|||Glade|||Lavender|||
+2002|||Ambi Pur Spray|||150.0|||35|||Cleaning Products|||Air Freshener|||Ambi Pur|||Linen|||
+2003|||Car Air Freshener|||60.0|||50|||Cleaning Products|||Air Freshener|||Little Trees|||New Car|||
+2004|||Bathroom Freshener|||55.0|||45|||Cleaning Products|||Air Freshener|||Local|||Floral|||
+2005|||Aromatherapy Oil|||120.0|||30|||Cleaning Products|||Air Freshener|||Local|||Lavender|||
+2006|||Room Spray|||95.0|||35|||Cleaning Products|||Air Freshener|||Watsons|||Fresh Air|||
+2007|||Scented Candle|||150.0|||20|||Cleaning Products|||Air Freshener|||Aromatics|||Vanilla|||
+2008|||Oil Diffuser|||300.0|||15|||Cleaning Products|||Air Freshener|||Local|||Wood|||
+2009|||Plug-In Freshener|||200.0|||20|||Cleaning Products|||Air Freshener|||Glade|||Jasmine|||
+2010|||Herbal Air Freshener|||80.0|||40|||Cleaning Products|||Air Freshener|||Local|||Mint|||
+2101|||Vitamin C 500mg|||150.0|||50|||Medications|||Vitamins|||Revicon|||500mg|||2027-01-01
+2102|||Multivitamins|||180.0|||45|||Medications|||Vitamins|||Centrum|||Adult|||2027-02-10
+2103|||Vitamin E|||220.0|||30|||Medications|||Vitamins|||Myra|||400IU|||2027-03-02
+2104|||Vitamin B Complex|||120.0|||50|||Medications|||Vitamins|||Rhea|||B-Complex|||2027-04-01
+2105|||Iron Supplement|||90.0|||40|||Medications|||Vitamins|||Sangobion|||Capsule|||2027-01-15
+2106|||Calcium + Vit D|||180.0|||35|||Medications|||Vitamins|||Caltrate|||Plus|||2027-06-10
+2107|||Zinc Supplement|||95.0|||45|||Medications|||Vitamins|||Watsons|||Zinc|||2027-03-20
+2108|||Vitamin A|||130.0|||30|||Medications|||Vitamins|||Rhea|||A Capsule|||2027-02-15
+2109|||Omega-3 Fish Oil|||250.0|||20|||Medications|||Vitamins|||Kirkland|||1000mg|||2027-07-01
+2110|||Kids Multivitamins|||160.0|||25|||Medications|||Vitamins|||Flintstones|||Chewable|||2026-12-20
+2201|||Biogesic|||45.0|||80|||Medications|||Pain Relief|||Biogesic|||500mg|||2026-01-10
+2202|||Alaxan FR|||90.0|||60|||Medications|||Pain Relief|||Alaxan|||FR|||2026-02-10
+2203|||Advil|||120.0|||50|||Medications|||Pain Relief|||Advil|||Liquid Gel|||2027-01-15
+2204|||Tylenol|||130.0|||45|||Medications|||Pain Relief|||Tylenol|||500mg|||2027-03-01
+2205|||Salonpas Patch|||60.0|||70|||Medications|||Pain Relief|||Salonpas|||Patch|||2027-04-01
+2206|||Kremil-S|||80.0|||55|||Medications|||Pain Relief|||Kremil-S|||Tablet|||2027-02-25
+2207|||Mefenamic Acid|||50.0|||75|||Medications|||Pain Relief|||Rhea|||250mg|||2027-05-10
+2208|||Tiger Balm|||120.0|||30|||Medications|||Pain Relief|||Tiger Balm|||Red|||2027-06-15
+2209|||Paracetamol Kids|||65.0|||40|||Medications|||Pain Relief|||Biogesic|||Kids|||2026-12-01
+2210|||Ibuprofen|||85.0|||60|||Medications|||Pain Relief|||Rhea|||200mg|||2027-02-01
+2301|||Cetirizine|||90.0|||50|||Medications|||Allergy Relief|||Rhea|||10mg|||2027-01-01
+2302|||Loratadine|||85.0|||55|||Medications|||Allergy Relief|||Claritin|||10mg|||2027-02-01
+2303|||Allerta|||95.0|||45|||Medications|||Allergy Relief|||United Pharma|||10mg|||2027-03-20
+2304|||Zyrtec|||120.0|||30|||Medications|||Allergy Relief|||Zyrtec|||Tablet|||2027-04-01
+2305|||Antihistamine Syrup|||80.0|||35|||Medications|||Allergy Relief|||Local|||Kids|||2026-11-30
+2306|||Decongestant Spray|||180.0|||20|||Medications|||Allergy Relief|||Vicks|||Nasal|||2027-05-15
+2307|||Hydrocortisone Tablet|||110.0|||25|||Medications|||Allergy Relief|||Rhea|||5mg|||2027-02-25
+2308|||Allergy Eye Drops|||150.0|||15|||Medications|||Allergy Relief|||Optrex|||Allergy|||2027-06-20
+2309|||Anti-Itch Lotion|||95.0|||40|||Medications|||Allergy Relief|||Caladryl|||Pink|||2027-04-30
+2310|||Loratadine Kids Syrup|||120.0|||20|||Medications|||Allergy Relief|||Claritin|||Syrup|||2026-12-10
+2401|||Betadine Solution|||90.0|||50|||Medications|||Topical Treatment|||Betadine|||Antiseptic|||2027-01-01
+2402|||Hydrocortisone Cream|||150.0|||30|||Medications|||Topical Treatment|||Kremil|||1%|||2027-03-10
+2403|||Mupirocin Ointment|||180.0|||20|||Medications|||Topical Treatment|||Bactroban|||2%|||2027-04-01
+2404|||Burn Ointment|||95.0|||40|||Medications|||Topical Treatment|||BurnHeal|||Cream|||2027-02-20
+2405|||Salicylic Acid|||85.0|||35|||Medications|||Topical Treatment|||Rhea|||Solution|||2027-06-12
+2406|||Clotrimazole Cream|||120.0|||35|||Medications|||Topical Treatment|||Canesten|||1%|||2027-05-05
+2407|||Anti-Fungal Powder|||100.0|||30|||Medications|||Topical Treatment|||Fungisol|||Powder|||2027-07-01
+2408|||Menthol Rub|||60.0|||50|||Medications|||Topical Treatment|||Vicks|||Vapor Rub|||2027-04-10
+2409|||Tawas Powder|||25.0|||60|||Medications|||Topical Treatment|||Local|||Powder|||
+2410|||Acne Spot Treatment|||150.0|||25|||Medications|||Topical Treatment|||Celeteque|||Anti-Acne|||2027-02-15
+2501|||Diarrhea Relief Capsule|||85.0|||40|||Medications|||Digestive Health|||Loperamide|||Capsule|||2027-01-01
+2502|||Probiotic Drink|||20.0|||60|||Medications|||Digestive Health|||Yakult|||Bottle|||2025-12-05
+2503|||Antacid Tablet|||60.0|||50|||Medications|||Digestive Health|||Tums|||Mint|||2027-04-01
+2504|||ORS Hydration Mix|||25.0|||70|||Medications|||Digestive Health|||Hydrite|||Lemon|||2027-02-01
+2505|||Fiber Supplement|||180.0|||30|||Medications|||Digestive Health|||Metamucil|||Orange|||2027-05-10
+2506|||Activated Charcoal|||95.0|||40|||Medications|||Digestive Health|||Rhea|||Capsule|||2027-03-10
+2507|||Probiotic Capsule|||250.0|||20|||Medications|||Digestive Health|||Culturelle|||Capsule|||2027-06-01
+2508|||Bismuth Subsalicylate|||110.0|||35|||Medications|||Digestive Health|||Pepto|||Liquid|||2027-01-20
+2509|||Antacid Syrup|||85.0|||25|||Medications|||Digestive Health|||Kremil|||Syrup|||2026-12-15
+2510|||Lactose Enzyme|||150.0|||20|||Medications|||Digestive Health|||Lactaid|||Tablet|||2027-04-15

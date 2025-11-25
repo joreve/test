@@ -1,0 +1,177 @@
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
+/**
+ * ConvenienceStoreController manages the customer shopping experience.
+ *
+ * @author Dana Ysabelle A. Pelagio and Joreve P. De Jesus
+ */
+public class ConvenienceStoreController {
+    private Stage primaryStage;
+    private ConvenienceStore store;
+    private Customer customer;
+    private DataManager dataManager;
+    private String username;
+    
+    private Scene storeScene;
+    private Scene cartScene;
+    private Scene checkoutScene;
+    
+    private ConvenienceStoreView storeView;
+    private CartView cartView;
+    private CheckoutView checkoutView;
+    
+    public ConvenienceStoreController(Stage primaryStage, ConvenienceStore store, 
+                          Customer customer, DataManager dataManager, String username) {
+        this.primaryStage = primaryStage;
+        this.store = store;
+        this.customer = customer;
+        this.dataManager = dataManager;
+        this.username = username;
+    }
+    
+    public void showShoppingView() {
+        storeView = new ConvenienceStoreView(store, customer, this);
+        storeScene = new Scene(storeView);
+        
+        primaryStage.setScene(storeScene);
+        primaryStage.setTitle("11-Seven - Shopping");
+    }
+    
+    public void showCartView() {
+        if (customer.getCart().isEmpty()) {
+            showAlert("Empty Cart", "Your cart is empty. Add some items first!", Alert.AlertType.WARNING);
+            return;
+        }
+        
+        cartView = new CartView(customer.getCart());
+        cartView.getCheckoutButton().setOnAction(e -> showCheckoutView());
+        
+        Button backButton = new Button("← Back to Store");
+        backButton.setStyle("-fx-font-size: 14px;");
+        backButton.setOnAction(e -> {
+            showShoppingView();
+            storeView.updateCartCount();
+        });
+        
+        BorderPane cartLayout = new BorderPane();
+        cartLayout.setCenter(cartView);
+        
+        HBox bottomBox = new HBox(backButton);
+        bottomBox.setPadding(new Insets(15));
+        bottomBox.setAlignment(Pos.CENTER_LEFT);
+        cartLayout.setBottom(bottomBox);
+        
+        cartScene = new Scene(cartLayout);
+        primaryStage.setScene(cartScene);
+        primaryStage.setTitle("Shopping Cart");
+    }
+    
+    public void showCheckoutView() {
+        checkoutView = new CheckoutView(customer, customer.getCart());
+        checkoutView.getBackButton().setOnAction(e -> showCartView());
+        checkoutView.getProcessPaymentButton().setOnAction(e -> processCheckout());
+        
+        checkoutScene = new Scene(checkoutView);
+        primaryStage.setScene(checkoutScene);
+        primaryStage.setTitle("Checkout");
+    }
+    
+    private void processCheckout() {
+        try {
+            String amountText = checkoutView.getAmountReceived();
+            if (amountText == null || amountText.trim().isEmpty()) {
+                showAlert("Invalid Payment", "Please enter payment amount.", Alert.AlertType.WARNING);
+                return;
+            }
+            
+            double amountReceived = Double.parseDouble(amountText);
+            double subtotal = customer.getCart().computeSubtotal();
+            double afterDiscount = subtotal;
+            
+            if (checkoutView.isSeniorDiscount()) {
+                afterDiscount = DiscountPolicy.applySeniorDiscount(afterDiscount);
+            }
+            
+            if (checkoutView.isUseMembershipPoints() && customer.hasMembershipCard()) {
+                afterDiscount = DiscountPolicy.applyMembershipDiscount(customer, afterDiscount);
+            }
+            
+            double vat = DiscountPolicy.calculateVAT(afterDiscount);
+            double total = afterDiscount + vat;
+            
+            if (amountReceived < total) {
+                showAlert("Insufficient Payment", 
+                         String.format("Need ₱%.2f more", total - amountReceived),
+                         Alert.AlertType.WARNING);
+                return;
+            }
+            
+            Payment payment = new Payment(amountReceived, total);
+            Transaction transaction = customer.checkOut(store);
+            transaction.setPayment(payment);
+            
+            if (customer.hasMembershipCard()) {
+                MembershipCard card = customer.getMembershipCard();
+                if (checkoutView.isUseMembershipPoints()) {
+                    int pointsToRedeem = Math.min(card.getPoints(), (int)subtotal);
+                    card.redeemPoints(pointsToRedeem);
+                }
+                card.addPoints(total);
+                
+                dataManager.updateCustomer(customer, username);
+            }
+            
+            dataManager.saveProducts(store.getInventory().getProducts());
+            
+            dataManager.saveTransaction(transaction);
+            
+            Receipt receipt = transaction.generateReceipt();
+            receipt.setDataManager(dataManager);
+            ReceiptView receiptView = new ReceiptView(receipt);
+            receiptView.show();
+            
+            showAlert("Transaction Complete",
+                     String.format("Change: ₱%.2f\nThank you for shopping!", payment.computeChange()),
+                     Alert.AlertType.INFORMATION);
+            
+            showShoppingView();
+            storeView.refresh();
+            
+        } catch (NumberFormatException ex) {
+            showAlert("Invalid Input", "Please enter a valid amount.", Alert.AlertType.ERROR);
+        }
+    }
+    
+    public void handleLogout() {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Logout");
+        confirm.setHeaderText("Logout Confirmation");
+        confirm.setContentText("Are you sure you want to logout?\nYour cart will be cleared.");
+        
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                customer.getCart().clear();
+                
+                LoginController loginController = new LoginController(null, dataManager);
+                LoginView loginView = new LoginView(loginController);
+                
+                Scene loginScene = new Scene(loginView);
+                primaryStage.setScene(loginScene);
+                primaryStage.setTitle("Login - Convenience Store");
+            }
+        });
+    }
+    
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+}
