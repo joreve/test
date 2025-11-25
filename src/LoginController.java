@@ -23,6 +23,12 @@ public class LoginController {
     }
     
     public void handleLogin(String username, String password, String userType) {
+        // Add null check for loginView
+        if (loginView == null) {
+            System.err.println("Error: LoginView is not set in LoginController");
+            return;
+        }
+        
         if ("Customer".equals(userType)) {
             Customer customer = dataManager.authenticateCustomer(username, password);
             if (customer != null) {
@@ -64,6 +70,11 @@ public class LoginController {
     
     public void handleRegister(String username, String password, String name, 
                                String userType, String employeeId) {
+        if (registerView == null) {
+            System.err.println("Error: RegisterView is not set in LoginController");
+            return;
+        }
+        
         if (dataManager.usernameExists(username)) {
             registerView.showStatus("Username already exists. Please choose another.", "error");
             return;

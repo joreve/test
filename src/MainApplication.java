@@ -2,7 +2,7 @@
  *  Description     : Main Application class for Convenience Store Management System.
  *  Author/s        : De Jesus, Joreve P., Pelagio, Dana Ysabelle A.
  *  Section         : S12
- *  Last Modified   : November 24, 2025
+ *  Last Modified   : November 25, 2025
  ******************************************************************************/
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +30,6 @@ public class MainApplication extends Application {
     
     private LoginView loginView;
     private RegisterView registerView;
-    private Scene loginScene;
-    private Scene registerScene;
     
     public static void main(String[] args) {
         launch(args);
@@ -64,7 +62,6 @@ public class MainApplication extends Application {
         Map<String, Shelf> shelfMap = new HashMap<>();
 
         for (Product product : loadedProducts) {
-
             store.getInventory().addProduct(product);
 
             String key = product.getCategory().getName() + "-" + product.getCategory().getType();
@@ -81,6 +78,7 @@ public class MainApplication extends Application {
 
     /**
      * Sets up the login and registration views and their controller.
+     * This method is called to recreate the login system after logout.
      */
     private void initializeLoginSystem() {
         loginController = new LoginController(this, dataManager);
@@ -89,32 +87,32 @@ public class MainApplication extends Application {
         
         loginController.setLoginView(loginView);
         loginController.setRegisterView(registerView);
-        
-        loginScene = new Scene(loginView, 800, 700);
-        registerScene = new Scene(registerView, 800, 700);
     }
     
-    
     /**
-     * 
+     * Shows the login view.
      */
     public void showLoginView() {
+        Scene loginScene = new Scene(loginView, 800, 700);
         primaryStage.setScene(loginScene);
         primaryStage.setTitle("Login - Convenience Store");
     }
     
     /**
-     * 
+     * Shows the registration view.
      */
     public void showRegisterView() {
+        Scene registerScene = new Scene(registerView, 800, 700);
         primaryStage.setScene(registerScene);
         primaryStage.setTitle("Register - Convenience Store");
     }
     
     /**
-     * @param customer
-     * @param employee
-     * @param username
+     * Called when login is successful. Routes to appropriate view.
+     * 
+     * @param customer the logged-in customer (null if employee)
+     * @param employee the logged-in employee (null if customer)
+     * @param username the username used to login
      */
     public void onLoginSuccess(Customer customer, Employee employee, String username) {
         this.currentUsername = username;
@@ -131,7 +129,7 @@ public class MainApplication extends Application {
     }
     
     /**
-     * 
+     * Shows the customer shopping view.
      */
     private void showCustomerView() {
         ConvenienceStoreController storeController = new ConvenienceStoreController(
@@ -140,17 +138,16 @@ public class MainApplication extends Application {
         storeController.showShoppingView();
     }
     
-
     /**
-     * 
+     * Shows the employee dashboard view.
      */
     private void showEmployeeView() {
         reloadInventory();
         
-        EmployeeView employeeView = new EmployeeView(store, currentEmployee, this, dataManager);
-        Scene employeeScene = new Scene(employeeView);
-        primaryStage.setScene(employeeScene);
-        primaryStage.setTitle("Employee Dashboard - " + currentEmployee.getName());
+        EmployeeController employeeController = new EmployeeController(
+            primaryStage, store, currentEmployee, this, dataManager
+        );
+        employeeController.showEmployeeView();
     }
     
     /**
@@ -162,28 +159,39 @@ public class MainApplication extends Application {
             shelf.getProducts().clear();
         }
         
-        for (Product product : dataManager.loadProducts()) {
+        List<Product> loadedProducts = dataManager.loadProducts();
+        Map<String, Shelf> shelfMap = new HashMap<>();
+        
+        for (Shelf shelf : store.getInventory().getShelves()) {
+            String key = shelf.getCategory().getName() + "-" + shelf.getCategory().getType();
+            shelfMap.put(key, shelf);
+        }
+        
+        for (Product product : loadedProducts) {
             store.getInventory().addProduct(product);
             
-            for (Shelf shelf : store.getInventory().getShelves()) {
-                if (shelf.getCategory().getName().equals(product.getCategory().getName()) &&
-                    shelf.getCategory().getType().equals(product.getCategory().getType())) {
-                    shelf.addProduct(product);
-                    break;
-                }
+            String key = product.getCategory().getName() + "-" + product.getCategory().getType();
+            
+            if (!shelfMap.containsKey(key)) {
+                Shelf newShelf = new Shelf(product.getCategory());
+                shelfMap.put(key, newShelf);
+                store.getInventory().addShelf(newShelf);
             }
+            
+            shelfMap.get(key).addProduct(product);
         }
     }
     
     /**
-     * 
+     * Logs out the current user and returns to login screen.
      */
     public void logout() {
         currentCustomer = null;
         currentEmployee = null;
         currentUsername = null;
-        loginView.clearFields();
-        registerView.clearFields();
+        
+        // Reinitialize login system to ensure clean state
+        initializeLoginSystem();
         showLoginView();
     }
     

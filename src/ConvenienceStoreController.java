@@ -38,6 +38,10 @@ public class ConvenienceStoreController {
         storeView = new ConvenienceStoreView(store, customer, this);
         storeScene = new Scene(storeView);
         
+        // Prevent window from being too small
+        primaryStage.setMinWidth(1024);
+        primaryStage.setMinHeight(768);
+        
         primaryStage.setScene(storeScene);
         primaryStage.setTitle("11-Seven - Shopping");
     }
@@ -67,6 +71,11 @@ public class ConvenienceStoreController {
         cartLayout.setBottom(bottomBox);
         
         cartScene = new Scene(cartLayout);
+        
+        // Maintain window size
+        primaryStage.setMinWidth(1024);
+        primaryStage.setMinHeight(768);
+        
         primaryStage.setScene(cartScene);
         primaryStage.setTitle("Shopping Cart");
     }
@@ -77,6 +86,11 @@ public class ConvenienceStoreController {
         checkoutView.getProcessPaymentButton().setOnAction(e -> processCheckout());
         
         checkoutScene = new Scene(checkoutView);
+        
+        // Maintain window size
+        primaryStage.setMinWidth(1024);
+        primaryStage.setMinHeight(768);
+        
         primaryStage.setScene(checkoutScene);
         primaryStage.setTitle("Checkout");
     }
@@ -127,23 +141,50 @@ public class ConvenienceStoreController {
             }
             
             dataManager.saveProducts(store.getInventory().getProducts());
-            
             dataManager.saveTransaction(transaction);
             
+            // Generate and save receipt automatically
             Receipt receipt = transaction.generateReceipt();
             receipt.setDataManager(dataManager);
+            receipt.saveToFile(); // Auto-save receipt
+            
             ReceiptView receiptView = new ReceiptView(receipt);
             receiptView.show();
             
             showAlert("Transaction Complete",
-                     String.format("Change: ₱%.2f\nThank you for shopping!", payment.computeChange()),
+                     String.format("Change: ₱%.2f\nReceipt saved automatically.\nThank you for shopping!", 
+                                 payment.computeChange()),
                      Alert.AlertType.INFORMATION);
             
+            // Reload inventory to reflect updated stock
+            reloadInventory();
             showShoppingView();
             storeView.refresh();
             
         } catch (NumberFormatException ex) {
             showAlert("Invalid Input", "Please enter a valid amount.", Alert.AlertType.ERROR);
+        }
+    }
+    
+    /**
+     * Reloads inventory from data manager to get latest stock levels.
+     */
+    private void reloadInventory() {
+        store.getInventory().getProducts().clear();
+        for (Shelf shelf : store.getInventory().getShelves()) {
+            shelf.getProducts().clear();
+        }
+        
+        for (Product product : dataManager.loadProducts()) {
+            store.getInventory().addProduct(product);
+            
+            for (Shelf shelf : store.getInventory().getShelves()) {
+                if (shelf.getCategory().getName().equals(product.getCategory().getName()) &&
+                    shelf.getCategory().getType().equals(product.getCategory().getType())) {
+                    shelf.addProduct(product);
+                    break;
+                }
+            }
         }
     }
     
@@ -157,12 +198,19 @@ public class ConvenienceStoreController {
             if (response == ButtonType.OK) {
                 customer.getCart().clear();
                 
-                LoginController loginController = new LoginController(null, dataManager);
-                LoginView loginView = new LoginView(loginController);
-                
-                Scene loginScene = new Scene(loginView);
-                primaryStage.setScene(loginScene);
-                primaryStage.setTitle("Login - Convenience Store");
+                // Use MainApplication's logout method which properly reinitializes login system
+                Stage stage = (Stage) primaryStage.getScene().getWindow();
+                javafx.application.Platform.runLater(() -> {
+                    LoginController loginController = new LoginController(null, dataManager);
+                    LoginView loginView = new LoginView(loginController);
+                    loginController.setLoginView(loginView);
+                    
+                    Scene loginScene = new Scene(loginView, 800, 700);
+                    primaryStage.setScene(loginScene);
+                    primaryStage.setTitle("Login - Convenience Store");
+                    primaryStage.setMinWidth(800);
+                    primaryStage.setMinHeight(700);
+                });
             }
         });
     }

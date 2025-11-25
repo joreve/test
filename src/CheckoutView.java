@@ -24,6 +24,7 @@ public class CheckoutView extends BorderPane {
     private Label totalLabel;
 
     private TextField membershipCardField;
+    private Button applyCardButton;
     private CheckBox useMembershipCheckBox;
     private CheckBox isSeniorCheckBox;
     private Label availablePointsLabel;
@@ -124,7 +125,7 @@ public class CheckoutView extends BorderPane {
         membershipCardField.setPromptText("Enter card number");
         membershipCardField.setPrefWidth(250);
 
-        Button applyCardButton = new Button("Apply Card");
+        applyCardButton = new Button("Apply Card");
         applyCardButton.setOnAction(e -> controller.handleApplyMembershipCard(membershipCardField.getText()));
 
         availablePointsLabel = new Label("Available Points: 0");
@@ -202,9 +203,16 @@ public class CheckoutView extends BorderPane {
             MembershipCard card = customer.getMembershipCard();
             membershipCardField.setText(card.getCardNumber());
             membershipCardField.setDisable(true);
+            applyCardButton.setDisable(true);
+            applyCardButton.setText("Card Applied");
+            applyCardButton.setStyle("-fx-background-color: #ccc; -fx-text-fill: #666;");
             availablePointsLabel.setText("Available Points: " + card.getPoints());
             useMembershipCheckBox.setDisable(false);
         } else {
+            membershipCardField.setDisable(false);
+            applyCardButton.setDisable(false);
+            applyCardButton.setText("Apply Card");
+            applyCardButton.setStyle("");
             availablePointsLabel.setText("No membership card");
             useMembershipCheckBox.setDisable(true);
         }

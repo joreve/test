@@ -44,26 +44,49 @@ public class Employee extends User {
     }
 
     /**
-     * Updates the information for an existing product by removing the old version
-     * and adding the new, updated version.
+     * Updates the information for an existing product.
+     * If category changed, removes from old shelf and adds to new shelf.
      *
      * @param inventory The store's inventory.
      * @param updatedProduct The Product object containing the updated information.
      */
     public void updateProductInfo(Inventory inventory, Product updatedProduct) {
-        inventory.removeProduct(updatedProduct.getProductID());
-        inventory.addProduct(updatedProduct);
-
-        for (Shelf shelf : inventory.getShelves()) {
-            ArrayList<Product> shelfProducts = shelf.getProducts();
-
-            for (int i = 0; i < shelfProducts.size(); i++) {
-                if (shelfProducts.get(i).getProductID() == updatedProduct.getProductID()) {
-                    shelfProducts.set(i, updatedProduct);
-                    break;
-                }
+        // Find the old product to check if category changed
+        Product oldProduct = null;
+        for (Product p : inventory.getProducts()) {
+            if (p.getProductID() == updatedProduct.getProductID()) {
+                oldProduct = p;
+                break;
             }
         }
+        
+        // Remove old product from inventory and all shelves
+        inventory.removeProduct(updatedProduct.getProductID());
+        
+        // Add updated product to inventory
+        inventory.addProduct(updatedProduct);
+        
+        // Find or create appropriate shelf for the updated product
+        boolean shelfFound = false;
+        for (Shelf shelf : inventory.getShelves()) {
+            if (shelf.getCategory().getName().equals(updatedProduct.getCategory().getName()) &&
+                shelf.getCategory().getType().equals(updatedProduct.getCategory().getType())) {
+                shelf.addProduct(updatedProduct);
+                shelfFound = true;
+                break;
+            }
+        }
+        
+        // If no matching shelf exists, create a new one
+        if (!shelfFound) {
+            Shelf newShelf = new Shelf(updatedProduct.getCategory());
+            newShelf.addProduct(updatedProduct);
+            inventory.addShelf(newShelf);
+            System.out.println("Created new shelf for category: " + 
+                             updatedProduct.getCategory().getName() + " - " + 
+                             updatedProduct.getCategory().getType());
+        }
+        
         System.out.println("Updated product information for: " + updatedProduct.getName());
     }
     
