@@ -39,13 +39,18 @@ public class MainApplication extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Convenience Store Management System");
-        
+        primaryStage.setWidth(1920);
+        primaryStage.setHeight(1080);
+        primaryStage.setMinWidth(1280);
+        primaryStage.setMinHeight(720);
+        primaryStage.setResizable(true);
+
         dataManager = new DataManager();
         initializeStore();
         initializeLoginSystem();
-        showLoginView();
         
-        primaryStage.setMaximized(true);
+        showLoginView();
+
         primaryStage.show();
     }
     
@@ -93,7 +98,9 @@ public class MainApplication extends Application {
      * Shows the login view.
      */
     public void showLoginView() {
-        Scene loginScene = new Scene(loginView, 800, 700);
+        loginView = new LoginView(loginController);
+        Scene loginScene = new Scene(loginView);
+
         primaryStage.setScene(loginScene);
         primaryStage.setTitle("Login - Convenience Store");
     }
@@ -102,7 +109,8 @@ public class MainApplication extends Application {
      * Shows the registration view.
      */
     public void showRegisterView() {
-        Scene registerScene = new Scene(registerView, 800, 700);
+        Scene registerScene = new Scene(registerView);
+
         primaryStage.setScene(registerScene);
         primaryStage.setTitle("Register - Convenience Store");
     }
@@ -133,7 +141,7 @@ public class MainApplication extends Application {
      */
     private void showCustomerView() {
         ConvenienceStoreController storeController = new ConvenienceStoreController(
-            primaryStage, store, currentCustomer, dataManager, currentUsername
+            primaryStage, store, currentCustomer, this, dataManager, currentUsername
         );
         storeController.showShoppingView();
     }

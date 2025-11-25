@@ -18,6 +18,7 @@ public class ConvenienceStoreView extends BorderPane {
     private ConvenienceStore store;
     private Customer customer;
     private ConvenienceStoreController controller;
+    private MainApplication mainApp;
     
     private TabPane mainCategoryTabs;
     private Button viewCartButton;
@@ -30,10 +31,11 @@ public class ConvenienceStoreView extends BorderPane {
      * @param customer The current customer
      * @param controller The store controller
      */
-    public ConvenienceStoreView(ConvenienceStore store, Customer customer, ConvenienceStoreController controller) {
+    public ConvenienceStoreView(ConvenienceStore store, Customer customer, ConvenienceStoreController controller, MainApplication mainApp) {
         this.store = store;
         this.customer = customer;
         this.controller = controller;
+        this.mainApp = mainApp;
         initializeUI();
     }
     

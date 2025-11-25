@@ -14,6 +14,7 @@ public class ConvenienceStoreController {
     private Stage primaryStage;
     private ConvenienceStore store;
     private Customer customer;
+    private MainApplication mainApp;
     private DataManager dataManager;
     private String username;
     
@@ -26,21 +27,18 @@ public class ConvenienceStoreController {
     private CheckoutView checkoutView;
     
     public ConvenienceStoreController(Stage primaryStage, ConvenienceStore store, 
-                          Customer customer, DataManager dataManager, String username) {
+                          Customer customer, MainApplication mainApp, DataManager dataManager, String username) {
         this.primaryStage = primaryStage;
         this.store = store;
         this.customer = customer;
+        this.mainApp = mainApp;
         this.dataManager = dataManager;
         this.username = username;
     }
     
     public void showShoppingView() {
-        storeView = new ConvenienceStoreView(store, customer, this);
+        storeView = new ConvenienceStoreView(store, customer, this, mainApp);
         storeScene = new Scene(storeView);
-        
-        // Prevent window from being too small
-        primaryStage.setMinWidth(1024);
-        primaryStage.setMinHeight(768);
         
         primaryStage.setScene(storeScene);
         primaryStage.setTitle("11-Seven - Shopping");
@@ -72,10 +70,6 @@ public class ConvenienceStoreController {
         
         cartScene = new Scene(cartLayout);
         
-        // Maintain window size
-        primaryStage.setMinWidth(1024);
-        primaryStage.setMinHeight(768);
-        
         primaryStage.setScene(cartScene);
         primaryStage.setTitle("Shopping Cart");
     }
@@ -86,10 +80,6 @@ public class ConvenienceStoreController {
         checkoutView.getProcessPaymentButton().setOnAction(e -> processCheckout());
         
         checkoutScene = new Scene(checkoutView);
-        
-        // Maintain window size
-        primaryStage.setMinWidth(1024);
-        primaryStage.setMinHeight(768);
         
         primaryStage.setScene(checkoutScene);
         primaryStage.setTitle("Checkout");
@@ -196,21 +186,7 @@ public class ConvenienceStoreController {
         
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                customer.getCart().clear();
-                
-                // Use MainApplication's logout method which properly reinitializes login system
-                Stage stage = (Stage) primaryStage.getScene().getWindow();
-                javafx.application.Platform.runLater(() -> {
-                    LoginController loginController = new LoginController(null, dataManager);
-                    LoginView loginView = new LoginView(loginController);
-                    loginController.setLoginView(loginView);
-                    
-                    Scene loginScene = new Scene(loginView, 800, 700);
-                    primaryStage.setScene(loginScene);
-                    primaryStage.setTitle("Login - Convenience Store");
-                    primaryStage.setMinWidth(800);
-                    primaryStage.setMinHeight(700);
-                });
+                mainApp.logout();
             }
         });
     }

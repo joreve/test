@@ -34,6 +34,7 @@ public class EmployeeController {
     public void showEmployeeView() {
         employeeView = new EmployeeView(store, employee, this);
         Scene employeeScene = new Scene(employeeView);
+        
         primaryStage.setScene(employeeScene);
         primaryStage.setTitle("Employee Dashboard - " + employee.getName());
     }
