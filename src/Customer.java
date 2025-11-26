@@ -22,6 +22,20 @@ public class Customer extends User {
     }
 
     /**
+     * Constructs a Customer with name, username, and password.
+     * Initializes a new empty cart for the customer.
+     *
+     * @param name the name of the customer
+     * @param username the username for login
+     * @param password the password for login
+     */
+    public Customer(String name, String username, String password) {
+        super(name, username, password);
+        this.cart = new Cart();
+        this.membershipCard = null;
+    }
+
+    /**
      * Constructs a Customer with the specified name and membership card.
      * Initializes a new empty cart for the customer.
      *
@@ -30,6 +44,20 @@ public class Customer extends User {
      */
     public Customer(String name, MembershipCard membershipCard) {
         super(name);
+        this.cart = new Cart();
+        this.membershipCard = membershipCard;
+    }
+
+    /**
+     * Full constructor for Customer with all attributes.
+     *
+     * @param name the name of the customer
+     * @param username the username for login
+     * @param password the password for login
+     * @param membershipCard the membership card of the customer
+     */
+    public Customer(String name, String username, String password, MembershipCard membershipCard) {
+        super(name, username, password);
         this.cart = new Cart();
         this.membershipCard = membershipCard;
     }

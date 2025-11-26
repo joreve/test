@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  * Represents an employee of the convenience store, inheriting basic user functionality.
  * Employees have specific actions like adding products and restocking.
@@ -17,6 +15,19 @@ public class Employee extends User {
      */
     public Employee(String name, String employeeID) {
         super(name);
+        this.employeeID = employeeID;
+    }
+
+    /**
+     * Constructs an Employee with full credentials.
+     *
+     * @param name The name of the employee.
+     * @param username The username for login.
+     * @param password The password for login.
+     * @param employeeID The unique ID of the employee.
+     */
+    public Employee(String name, String username, String password, String employeeID) {
+        super(name, username, password);
         this.employeeID = employeeID;
     }
 
@@ -51,15 +62,6 @@ public class Employee extends User {
      * @param updatedProduct The Product object containing the updated information.
      */
     public void updateProductInfo(Inventory inventory, Product updatedProduct) {
-        // Find the old product to check if category changed
-        Product oldProduct = null;
-        for (Product p : inventory.getProducts()) {
-            if (p.getProductID() == updatedProduct.getProductID()) {
-                oldProduct = p;
-                break;
-            }
-        }
-        
         // Remove old product from inventory and all shelves
         inventory.removeProduct(updatedProduct.getProductID());
         

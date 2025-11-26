@@ -7,6 +7,7 @@ import java.util.*;
 /**
  * DataManager handles all data persistence operations.
  * Manages users, products, and transactions in one unified class.
+ * Now properly uses User, Customer, and Employee objects.
  *
  * @author Joreve P. De Jesus
  */
@@ -55,12 +56,24 @@ public class DataManager {
     }
     
     /**
-     * Registers a new customer.
+     * Registers a new customer by saving to file.
+     * TXT Format: username|||password|||name|||cardNumber|||points
      */
-    public boolean registerCustomer(String username, String password, String name) {
+    public boolean registerCustomer(Customer customer) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(CUSTOMERS_FILE, true))) {
-            writer.println(username + DELIMITER + password + DELIMITER + name + 
-                          DELIMITER + "" + DELIMITER + "0");
+            String cardNumber = "";
+            String points = "0";
+            
+            if (customer.hasMembershipCard()) {
+                cardNumber = customer.getMembershipCard().getCardNumber();
+                points = String.valueOf(customer.getMembershipCard().getPoints());
+            }
+            
+            writer.println(customer.getUsername() + DELIMITER + 
+                          customer.getPassword() + DELIMITER + 
+                          customer.getName() + DELIMITER + 
+                          cardNumber + DELIMITER + 
+                          points);
             return true;
         } catch (IOException e) {
             System.err.println("Error registering customer: " + e.getMessage());
@@ -69,12 +82,15 @@ public class DataManager {
     }
     
     /**
-     * Registers a new employee.
+     * Registers a new employee by saving to file.
+     * TXT Format: username|||password|||name|||employeeID
      */
-    public boolean registerEmployee(String username, String password, String name, String employeeId) {
+    public boolean registerEmployee(Employee employee) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(EMPLOYEES_FILE, true))) {
-            writer.println(username + DELIMITER + password + DELIMITER + name + 
-                          DELIMITER + employeeId);
+            writer.println(employee.getUsername() + DELIMITER + 
+                          employee.getPassword() + DELIMITER + 
+                          employee.getName() + DELIMITER + 
+                          employee.getEmployeeID());
             return true;
         } catch (IOException e) {
             System.err.println("Error registering employee: " + e.getMessage());
@@ -83,7 +99,8 @@ public class DataManager {
     }
     
     /**
-     * Authenticates a customer.
+     * Authenticates a customer and returns Customer object.
+     * TXT Format: username|||password|||name|||cardNumber|||points
      */
     public Customer authenticateCustomer(String username, String password) {
         try (BufferedReader reader = new BufferedReader(new FileReader(CUSTOMERS_FILE))) {
@@ -92,8 +109,10 @@ public class DataManager {
                 String[] parts = line.split("\\|\\|\\|");
                 if (parts.length >= 3) {
                     if (parts[0].equals(username) && parts[1].equals(password)) {
-                        Customer customer = new Customer(parts[2]);
+                        // Create Customer with full credentials
+                        Customer customer = new Customer(parts[2], parts[0], parts[1]);
                         
+                        // Set membership card if exists
                         if (parts.length >= 5 && !parts[3].isEmpty()) {
                             MembershipCard card = new MembershipCard(parts[3]);
                             card.setPoints(Integer.parseInt(parts[4]));
@@ -111,7 +130,8 @@ public class DataManager {
     }
     
     /**
-     * Authenticates an employee.
+     * Authenticates an employee and returns Employee object.
+     * TXT Format: username|||password|||name|||employeeID
      */
     public Employee authenticateEmployee(String username, String password) {
         try (BufferedReader reader = new BufferedReader(new FileReader(EMPLOYEES_FILE))) {
@@ -120,7 +140,8 @@ public class DataManager {
                 String[] parts = line.split("\\|\\|\\|");
                 if (parts.length >= 4) {
                     if (parts[0].equals(username) && parts[1].equals(password)) {
-                        return new Employee(parts[2], parts[3]);
+                        // Create Employee with full credentials
+                        return new Employee(parts[2], parts[0], parts[1], parts[3]);
                     }
                 }
             }
@@ -131,7 +152,7 @@ public class DataManager {
     }
     
     /**
-     * Checks if username exists.
+     * Checks if username exists in either customers or employees file.
      */
     public boolean usernameExists(String username) {
         return checkUsernameInFile(CUSTOMERS_FILE, username) || 
@@ -154,16 +175,16 @@ public class DataManager {
     }
     
     /**
-     * Updates customer data.
+     * Updates customer data in file using Customer object.
      */
-    public void updateCustomer(Customer customer, String username) {
+    public void updateCustomer(Customer customer) {
         try {
             List<String> lines = Files.readAllLines(Paths.get(CUSTOMERS_FILE));
             List<String> updatedLines = new ArrayList<>();
             
             for (String line : lines) {
                 String[] parts = line.split("\\|\\|\\|");
-                if (parts.length >= 3 && parts[0].equals(username)) {
+                if (parts.length >= 3 && parts[0].equals(customer.getUsername())) {
                     String cardNumber = "";
                     String points = "0";
                     
@@ -173,9 +194,11 @@ public class DataManager {
                         points = String.valueOf(card.getPoints());
                     }
                     
-                    updatedLines.add(parts[0] + DELIMITER + parts[1] + DELIMITER + 
-                                   customer.getName() + DELIMITER + cardNumber + 
-                                   DELIMITER + points);
+                    updatedLines.add(customer.getUsername() + DELIMITER + 
+                                   customer.getPassword() + DELIMITER + 
+                                   customer.getName() + DELIMITER + 
+                                   cardNumber + DELIMITER + 
+                                   points);
                 } else {
                     updatedLines.add(line);
                 }
@@ -185,6 +208,56 @@ public class DataManager {
         } catch (IOException e) {
             System.err.println("Error updating customer: " + e.getMessage());
         }
+    }
+    
+    /**
+     * Loads all customers from file as Customer objects.
+     */
+    public List<Customer> loadAllCustomers() {
+        List<Customer> customers = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(CUSTOMERS_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|\\|\\|");
+                if (parts.length >= 3) {
+                    Customer customer = new Customer(parts[2], parts[0], parts[1]);
+                    
+                    if (parts.length >= 5 && !parts[3].isEmpty()) {
+                        MembershipCard card = new MembershipCard(parts[3]);
+                        card.setPoints(Integer.parseInt(parts[4]));
+                        customer.setMembershipCard(card);
+                    }
+                    
+                    customers.add(customer);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading customers: " + e.getMessage());
+        }
+        
+        return customers;
+    }
+    
+    /**
+     * Loads all employees from file as Employee objects.
+     */
+    public List<Employee> loadAllEmployees() {
+        List<Employee> employees = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(EMPLOYEES_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|\\|\\|");
+                if (parts.length >= 4) {
+                    employees.add(new Employee(parts[2], parts[0], parts[1], parts[3]));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading employees: " + e.getMessage());
+        }
+        
+        return employees;
     }
     
     /**

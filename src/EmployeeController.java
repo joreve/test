@@ -3,7 +3,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import java.time.LocalDate;
-import java.util.Optional;
 
 /**
  * EmployeeController manages employee interactions with the inventory system.

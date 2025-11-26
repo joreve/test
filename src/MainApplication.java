@@ -2,7 +2,7 @@
  *  Description     : Main Application class for Convenience Store Management System.
  *  Author/s        : De Jesus, Joreve P., Pelagio, Dana Ysabelle A.
  *  Section         : S12
- *  Last Modified   : November 25, 2025
+ *  Last Modified   : November 26, 2025
  ******************************************************************************/
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 /**
  * MainApplication serves as the single entry point for the application.
  * Manages navigation between login, registration, and main application views.
+ * Now properly works with Customer and Employee objects from authentication.
  *
  * @author Dana Ysabelle A. Pelagio and Joreve P. De Jesus
  */
@@ -23,7 +24,6 @@ public class MainApplication extends Application {
     private ConvenienceStore store;
     private Customer currentCustomer;
     private Employee currentEmployee;
-    private String currentUsername;
     
     private LoginController loginController;
     private DataManager dataManager;
@@ -97,9 +97,11 @@ public class MainApplication extends Application {
      * Shows the login view.
      */
     public void showLoginView() {
+        // Recreate to ensure clean state
         loginView = new LoginView(loginController);
+        loginController.setLoginView(loginView);
+        
         Scene loginScene = new Scene(loginView);
-
         primaryStage.setScene(loginScene);
         primaryStage.setTitle("Login - Convenience Store");
     }
@@ -108,22 +110,20 @@ public class MainApplication extends Application {
      * Shows the registration view.
      */
     public void showRegisterView() {
+        RegisterView registerView = new RegisterView(loginController);
         Scene registerScene = new Scene(registerView);
-
         primaryStage.setScene(registerScene);
         primaryStage.setTitle("Register - Convenience Store");
     }
     
     /**
      * Called when login is successful. Routes to appropriate view.
+     * Now receives Customer or Employee object directly from authentication.
      * 
      * @param customer the logged-in customer (null if employee)
      * @param employee the logged-in employee (null if customer)
-     * @param username the username used to login
      */
-    public void onLoginSuccess(Customer customer, Employee employee, String username) {
-        this.currentUsername = username;
-        
+    public void onLoginSuccess(Customer customer, Employee employee) {
         if (customer != null) {
             this.currentCustomer = customer;
             this.currentEmployee = null;
@@ -140,7 +140,7 @@ public class MainApplication extends Application {
      */
     private void showCustomerView() {
         ConvenienceStoreController storeController = new ConvenienceStoreController(
-            primaryStage, store, currentCustomer, this, dataManager, currentUsername
+            primaryStage, store, currentCustomer, this, dataManager
         );
         storeController.showShoppingView();
     }
@@ -195,7 +195,6 @@ public class MainApplication extends Application {
     public void logout() {
         currentCustomer = null;
         currentEmployee = null;
-        currentUsername = null;
         
         // Reinitialize login system to ensure clean state
         initializeLoginSystem();

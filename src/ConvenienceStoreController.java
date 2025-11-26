@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 
 /**
  * ConvenienceStoreController manages the customer shopping experience.
+ * Updated to properly work with Customer objects.
  *
  * @author Dana Ysabelle A. Pelagio and Joreve P. De Jesus
  */
@@ -16,7 +17,6 @@ public class ConvenienceStoreController {
     private Customer customer;
     private MainApplication mainApp;
     private DataManager dataManager;
-    private String username;
     
     private Scene storeScene;
     private Scene cartScene;
@@ -27,17 +27,16 @@ public class ConvenienceStoreController {
     private CheckoutView checkoutView;
     
     public ConvenienceStoreController(Stage primaryStage, ConvenienceStore store, 
-                          Customer customer, MainApplication mainApp, DataManager dataManager, String username) {
+                          Customer customer, MainApplication mainApp, DataManager dataManager) {
         this.primaryStage = primaryStage;
         this.store = store;
         this.customer = customer;
         this.mainApp = mainApp;
         this.dataManager = dataManager;
-        this.username = username;
     }
     
     public void showShoppingView() {
-        storeView = new ConvenienceStoreView(store, customer, this, mainApp);
+        storeView = new ConvenienceStoreView(store, customer, this);
         storeScene = new Scene(storeView);
         
         primaryStage.setScene(storeScene);
@@ -127,7 +126,8 @@ public class ConvenienceStoreController {
                 }
                 card.addPoints(total);
                 
-                dataManager.updateCustomer(customer, username);
+                // Update customer in file
+                dataManager.updateCustomer(customer);
             }
             
             dataManager.saveProducts(store.getInventory().getProducts());
