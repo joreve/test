@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -9,21 +11,52 @@ import javafx.scene.control.ButtonType;
  */
 public class ShoppingController {
     private Customer customer;
-    // private ConvenienceStore store;
+    private ConvenienceStore store;
     // private DataManager dataManager;
     private MainApplication mainApp;
     
     private CustomerView view;
     
-    public ShoppingController(Customer customer, MainApplication mainApp) {
+    public ShoppingController(Customer customer, ConvenienceStore store, MainApplication mainApp) {
         this.customer = customer;
-        // this.store = store;
+        this.store = store;
         // this.dataManager = dataManager;
         this.mainApp = mainApp;
     }
     
     public void setView(CustomerView view) {
         this.view = view;
+    }
+
+    public String getStoreName() {
+        return store.getName();
+    }
+
+    public String getStoreLocation() {
+        return store.getLocation();
+    }
+
+    public ArrayList<Shelf> getShelves() {
+        return store.getInventory().getShelves();
+    }
+
+    public String getCustomerName() {
+        return customer.getName();
+    }
+
+    public int getCartItemCount() {
+        return customer.getCart().getItems().size();
+    }
+
+    public boolean hasMembershipCard() {
+        return customer.hasMembershipCard();
+    }
+
+    public int getMembershipPoints() {
+        if (customer.hasMembershipCard()) {
+            return customer.getMembershipCard().getPoints();
+        }
+        return 0;
     }
     
     /**

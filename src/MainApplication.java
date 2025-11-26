@@ -83,10 +83,10 @@ public class MainApplication extends Application {
         AuthenticationController authController = new AuthenticationController(dataManager, this);
         
         // Create view
-        LoginView loginView = new LoginView();
+        LoginView loginView = new LoginView(authController);
         
         // Connect them
-        loginView.setController(authController);
+        // loginView.setController(authController);
         authController.setView(loginView);
         
         // Display
@@ -141,15 +141,15 @@ public class MainApplication extends Application {
         
         // Create controller with dependencies
         ShoppingController shoppingController = new ShoppingController(
-            currentCustomer, 
+            currentCustomer, store,
             this  // Pass MainApplication directly
         );
         
         // Create view
-        CustomerView customerView = new CustomerView(store, currentCustomer);
+        CustomerView customerView = new CustomerView(shoppingController);
         
         // Connect them
-        customerView.setController(shoppingController);
+        // customerView.setController(shoppingController);
         shoppingController.setView(customerView);
         
         // Display
@@ -174,10 +174,10 @@ public class MainApplication extends Application {
         );
         
         // Create view
-        CartView cartView = new CartView(currentCustomer.getCart());
+        CartView cartView = new CartView(cartController);
         
         // Connect them
-        cartView.setController(cartController);
+        // cartView.setController(cartController);
         cartController.setView(cartView);
         
         // Display
@@ -200,10 +200,10 @@ public class MainApplication extends Application {
         );
         
         // Create view
-        CheckoutView checkoutView = new CheckoutView(currentCustomer, currentCustomer.getCart());
+        CheckoutView checkoutView = new CheckoutView(checkoutController);
         
         // Connect them
-        checkoutView.setController(checkoutController);
+        // checkoutView.setController(checkoutController);
         checkoutController.setView(checkoutView);
         
         // Display
@@ -227,10 +227,10 @@ public class MainApplication extends Application {
         );
         
         // Create view
-        EmployeeView employeeView = new EmployeeView(store, currentEmployee);
+        EmployeeView employeeView = new EmployeeView(employeeController);
         
         // Connect them
-        employeeView.setController(employeeController);
+        // employeeView.setController(employeeController);
         employeeController.setView(employeeView);
         
         // Display

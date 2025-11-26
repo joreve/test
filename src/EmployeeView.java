@@ -15,8 +15,8 @@ import java.util.*;
  * @author Joreve P. De Jesus
  */
 public class EmployeeView extends BorderPane {
-    private ConvenienceStore store;
-    private Employee employee;
+    // private ConvenienceStore store;
+    // private Employee employee;
     private EmployeeController controller;
     
     private TabPane mainCategoryTabs;
@@ -26,21 +26,9 @@ public class EmployeeView extends BorderPane {
     private int currentMainTabIndex = 0;
     private Map<String, Integer> subTabIndices = new HashMap<>();
     
-    public EmployeeView(ConvenienceStore store, Employee employee) {
-        this.store = store;
-        this.employee = employee;
-        initializeUI();
-    }
-    
-    /**
-     * Injects the controller after view creation.
-     */
-    public void setController(EmployeeController controller) {
+    public EmployeeView(EmployeeController controller) {
         this.controller = controller;
-        // Now that controller is set, load the sales data
-        if (salesArea != null) {
-            refreshSalesDisplay(salesArea);
-        }
+        initializeUI();
     }
     
     private void initializeUI() {
@@ -56,6 +44,10 @@ public class EmployeeView extends BorderPane {
         
         mainTabs.getTabs().addAll(inventoryTab, addProductTab, salesTab);
         setCenter(mainTabs);
+
+        if (salesArea != null) {
+            refreshSalesDisplay(salesArea);
+        }
     }
     
     private HBox createTopBar() {
@@ -71,7 +63,7 @@ public class EmployeeView extends BorderPane {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         
-        Label employeeLabel = new Label("👤 " + employee.getName() + " (ID: " + employee.getEmployeeID() + ")");
+        Label employeeLabel = new Label("👤 " + controller.getEmployeeName() + " (ID: " + controller.getEmployeeID() + ")");
         employeeLabel.setFont(Font.font("Arial", 14));
         employeeLabel.setStyle("-fx-text-fill: white;");
         
@@ -130,7 +122,7 @@ public class EmployeeView extends BorderPane {
         lowStockFlow.setHgap(10);
         lowStockFlow.setVgap(5);
         
-        ArrayList<Product> lowStock = store.getInventory().flagLowStock();
+        ArrayList<Product> lowStock = controller.flagLowStock();
         
         if (lowStock.isEmpty()) {
             Label noAlerts = new Label("No low stock items");
@@ -160,7 +152,7 @@ public class EmployeeView extends BorderPane {
         expiryFlow.setHgap(10);
         expiryFlow.setVgap(5);
         
-        ArrayList<Product> expiringProducts = store.getInventory().flagExpiringProducts(15);
+        ArrayList<Product> expiringProducts = controller.flagExpiringProducts(15);
         
         if (expiringProducts.isEmpty()) {
             Label noAlerts = new Label("No products expiring soon");
@@ -186,7 +178,7 @@ public class EmployeeView extends BorderPane {
     private Map<String, Map<String, List<Product>>> organizeProductsByCategory() {
         Map<String, Map<String, List<Product>>> organized = new LinkedHashMap<>();
         
-        for (Shelf shelf : store.getInventory().getShelves()) {
+        for (Shelf shelf : controller.getShelves()) {
             String mainCat = shelf.getCategory().getName();
             String subCat = shelf.getCategory().getType();
             
@@ -587,7 +579,7 @@ public class EmployeeView extends BorderPane {
     private List<String> getAllCategories() {
         Set<String> categories = new LinkedHashSet<>();
         
-        for (Shelf shelf : store.getInventory().getShelves()) {
+        for (Shelf shelf : controller.getShelves()) {
             String category = shelf.getCategory().getName() + "-" + shelf.getCategory().getType();
             categories.add(category);
         }
@@ -632,10 +624,10 @@ public class EmployeeView extends BorderPane {
         }
         
         // Refresh alerts with updated counts
-        lowStockPane.setText("⚠️ Low Stock Alerts (" + store.getInventory().flagLowStock().size() + ")");
+        lowStockPane.setText("⚠️ Low Stock Alerts (" + controller.flagLowStock().size() + ")");
         lowStockPane.setContent(createLowStockAlert().getContent());
         
-        expiryAlertPane.setText("📅 Expiration Alerts (" + store.getInventory().flagExpiringProducts(15).size() + ")");
+        expiryAlertPane.setText("📅 Expiration Alerts (" + controller.flagExpiringProducts(15).size() + ")");
         expiryAlertPane.setContent(createExpiryAlert().getContent());
     }
     

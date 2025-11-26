@@ -21,15 +21,9 @@ public class LoginView extends BorderPane {
     private Button registerButton;
     private Label statusLabel;
     
-    public LoginView() {
-        initializeUI();
-    }
-    
-    /**
-     * Injects the controller after view creation.
-     */
-    public void setController(AuthenticationController controller) {
+    public LoginView(AuthenticationController controller) {
         this.controller = controller;
+        initializeUI();
     }
     
     private void initializeUI() {

@@ -16,27 +16,17 @@ import java.util.*;
  * @author Dana Ysabelle A. Pelagio and Joreve P. De Jesus
  */
 public class CustomerView extends BorderPane {
-    private ConvenienceStore store;
-    private Customer customer;
+    // private ConvenienceStore store;
+    // private Customer customer;
     private ShoppingController controller;
     
     private TabPane mainCategoryTabs;
     private Button viewCartButton;
     private Label cartItemCountLabel;
     
-    public CustomerView(ConvenienceStore store, Customer customer) {
-        this.store = store;
-        this.customer = customer;
-        initializeUI();
-    }
-    
-    /**
-     * Injects the controller after view creation.
-     */
-    public void setController(ShoppingController controller) {
+    public CustomerView(ShoppingController controller) {
         this.controller = controller;
-        // Update cart count immediately when view is shown
-        updateCartCount();
+        initializeUI();
     }
     
     /**
@@ -60,6 +50,8 @@ public class CustomerView extends BorderPane {
         
         HBox bottomBar = createBottomBar();
         setBottom(bottomBar);
+
+        updateCartCount();
     }
     
     private HBox createTopBar() {
@@ -68,14 +60,14 @@ public class CustomerView extends BorderPane {
         topBar.setStyle("-fx-background-color: #4CAF50;");
         topBar.setAlignment(Pos.CENTER_LEFT);
         
-        Label storeLabel = new Label("🏪 " + store.getName() + " - " + store.getLocation());
+        Label storeLabel = new Label("🏪 " + controller.getStoreName() + " - " + controller.getStoreLocation());
         storeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         storeLabel.setStyle("-fx-text-fill: white;");
         
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         
-        Label customerLabel = new Label("👤 " + customer.getName());
+        Label customerLabel = new Label("👤 " + controller.getCustomerName());
         customerLabel.setFont(Font.font("Arial", 16));
         customerLabel.setStyle("-fx-text-fill: white;");
         
@@ -83,8 +75,8 @@ public class CustomerView extends BorderPane {
         customerBox.setAlignment(Pos.CENTER_RIGHT);
         customerBox.getChildren().add(customerLabel);
         
-        if (customer.hasMembershipCard()) {
-            Label memberLabel = new Label("⭐ " + customer.getMembershipCard().getPoints() + " points");
+        if (controller.hasMembershipCard()) {
+            Label memberLabel = new Label("⭐ " + controller.getMembershipPoints() + " points");
             memberLabel.setFont(Font.font("Arial", 12));
             memberLabel.setStyle("-fx-text-fill: #FFD700;");
             customerBox.getChildren().add(memberLabel);
@@ -128,7 +120,7 @@ public class CustomerView extends BorderPane {
     private Map<String, Map<String, List<Product>>> organizeProductsByCategory() {
         Map<String, Map<String, List<Product>>> organized = new LinkedHashMap<>();
         
-        for (Shelf shelf : store.getInventory().getShelves()) {
+        for (Shelf shelf : controller.getShelves()) {
             String mainCategory = shelf.getCategory().getName();
             String subCategory = shelf.getCategory().getType();
             
@@ -270,7 +262,7 @@ public class CustomerView extends BorderPane {
      * Called by controller after adding items.
      */
     public void updateCartCount() {
-        int itemCount = customer.getCart().getItems().size();
+        int itemCount = controller.getCartItemCount();
         cartItemCountLabel.setText("Cart: " + itemCount + " items");
     }
     

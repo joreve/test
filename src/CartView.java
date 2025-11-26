@@ -13,7 +13,7 @@ import javafx.scene.text.FontWeight;
  * @author Dana Ysabelle A. Pelagio
  */
 public class CartView extends BorderPane {
-    private Cart cart;
+    // private Cart cart;
     private CartController controller;
     
     private ListView<HBox> cartListView;
@@ -23,18 +23,11 @@ public class CartView extends BorderPane {
     private Button clearCartButton;
     private Button backButton;
 
-    public CartView(Cart cart) {
-        this.cart = cart;
+    public CartView(CartController controller) {
+        this.controller = controller;
         initializeUI();
     }
     
-    /**
-     * Injects the controller after view creation.
-     */
-    public void setController(CartController controller) {
-        this.controller = controller;
-    }
-
     private void initializeUI() {
         // Top: Title
         Label titleLabel = new Label("Shopping Cart");
@@ -92,7 +85,7 @@ public class CartView extends BorderPane {
     public void refreshCartDisplay() {
         cartListView.getItems().clear();
 
-        if (cart.isEmpty()) {
+        if (controller.isCartEmpty()) {
             Label emptyLabel = new Label("Your cart is empty");
             emptyLabel.setFont(Font.font("Arial", 14));
             HBox emptyBox = new HBox(emptyLabel);
@@ -110,13 +103,13 @@ public class CartView extends BorderPane {
         checkoutButton.setDisable(false);
         clearCartButton.setDisable(false);
 
-        for (CartItem item : cart.getItems()) {
+        for (CartItem item : controller.getCartItems()) {
             HBox itemBox = createCartItemBox(item);
             cartListView.getItems().add(itemBox);
         }
 
-        itemCountLabel.setText("Items: " + cart.getItems().size());
-        subtotalLabel.setText(String.format("Subtotal: ₱%.2f", cart.computeSubtotal()));
+        itemCountLabel.setText("Items: " + controller.getCartItems().size());
+        subtotalLabel.setText(String.format("Subtotal: ₱%.2f", controller.computeSubtotal()));
     }
 
     private HBox createCartItemBox(CartItem item) {

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -19,6 +20,18 @@ public class CartController {
     
     public void setView(CartView view) {
         this.view = view;
+    }
+
+    public boolean isCartEmpty() {
+        return cart.isEmpty();
+    }
+
+    public ArrayList<CartItem> getCartItems() {
+        return cart.getItems();
+    }
+
+    public double computeSubtotal() {
+        return cart.computeSubtotal();
     }
 
     /**

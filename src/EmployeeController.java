@@ -1,6 +1,7 @@
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * EmployeeController manages inventory operations.
@@ -25,6 +26,26 @@ public class EmployeeController {
     
     public void setView(EmployeeView view) {
         this.view = view;
+    }
+
+    public String getEmployeeName() {
+        return employee.getName();
+    }
+
+    public String getEmployeeID() {
+        return employee.getEmployeeID();
+    }
+
+    public ArrayList<Product> flagLowStock() {
+        return store.getInventory().flagLowStock();
+    }
+
+    public ArrayList<Product> flagExpiringProducts(int daysThreshold) {
+        return store.getInventory().flagExpiringProducts(daysThreshold);
+    }
+
+    public ArrayList<Shelf> getShelves() {
+        return store.getInventory().getShelves();
     }
     
     /**

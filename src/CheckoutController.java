@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.scene.control.Alert;
 
 /**
@@ -34,6 +36,18 @@ public class CheckoutController {
         this.view = view;
         // Initial calculation when view is set
         recalculatePricing();
+    }
+
+    public ArrayList<CartItem> getCartItems() {
+        return cart.getItems();
+    }
+
+    public boolean hasMembershipCard() {
+        return customer.hasMembershipCard();
+    }
+
+    public MembershipCard getMembershipCard() {
+        return customer.getMembershipCard();
     }
 
     /**

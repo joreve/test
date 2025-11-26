@@ -13,8 +13,8 @@ import javafx.scene.text.FontWeight;
  * @author Dana Ysabelle A. Pelagio
  */
 public class CheckoutView extends BorderPane {
-    private Customer customer;
-    private Cart cart;
+    // private Customer customer;
+    // private Cart cart;
     private CheckoutController controller;
 
     // UI Components
@@ -35,19 +35,11 @@ public class CheckoutView extends BorderPane {
     private Button processPaymentButton;
     private Button backButton;
 
-    public CheckoutView(Customer customer, Cart cart) {
-        this.customer = customer;
-        this.cart = cart;
+    public CheckoutView(CheckoutController controller) {
+        this.controller = controller;
         initializeUI();
     }
     
-    /**
-     * Injects the controller after view creation.
-     */
-    public void setController(CheckoutController controller) {
-        this.controller = controller;
-    }
-
     private void initializeUI() {
         // Top: Title
         Label titleLabel = new Label("Checkout");
@@ -179,7 +171,7 @@ public class CheckoutView extends BorderPane {
      */
     private void refreshOrderSummary() {
         orderSummaryList.getItems().clear();
-        for (CartItem item : cart.getItems()) {
+        for (CartItem item : controller.getCartItems()) {
             HBox itemBox = createOrderItemBox(item);
             orderSummaryList.getItems().add(itemBox);
         }
@@ -210,8 +202,8 @@ public class CheckoutView extends BorderPane {
      * Called by controller after card is applied.
      */
     public void updateMembershipDisplay() {
-        if (customer.hasMembershipCard()) {
-            MembershipCard card = customer.getMembershipCard();
+        if (controller.hasMembershipCard()) {
+            MembershipCard card = controller.getMembershipCard();
             membershipCardField.setText(card.getCardNumber());
             membershipCardField.setDisable(true);
             applyCardButton.setDisable(true);
