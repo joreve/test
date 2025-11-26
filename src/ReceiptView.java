@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * ReceiptView displays a formatted receipt in a separate window.
  * Shows itemized purchases, discounts, totals, and payment information.
+ * Receipt is automatically saved to file when created.
  *
  * @author Dana Ysabelle A. Pelagio
  */
@@ -19,20 +20,12 @@ public class ReceiptView extends Stage {
     private Transaction transaction;
     private TextArea receiptTextArea;
 
-    /**
-     * Constructs a ReceiptView for the specified receipt.
-     *
-     * @param receipt the receipt to display
-     */
     public ReceiptView(Receipt receipt) {
         this.receipt = receipt;
         this.transaction = getTransactionFromReceipt(receipt);
         initializeUI();
     }
 
-    /**
-     * Initializes the user interface.
-     */
     private void initializeUI() {
         setTitle("Receipt - " + transaction.getTransactionID());
 
@@ -67,36 +60,31 @@ public class ReceiptView extends Stage {
 
         Separator sep2 = new Separator();
 
-        // Buttons
+        // Info label
+        Label infoLabel = new Label("✓ Receipt automatically saved to file");
+        infoLabel.setFont(Font.font("Arial", 12));
+        infoLabel.setStyle("-fx-text-fill: #4CAF50;");
+
+        // Buttons - Removed Save button
         Button printButton = new Button("Print Receipt");
         printButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px;");
         printButton.setPrefWidth(150);
         printButton.setOnAction(e -> handlePrint());
-
-        Button saveButton = new Button("Save to File");
-        saveButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;");
-        saveButton.setPrefWidth(150);
-        saveButton.setOnAction(e -> handleSave());
 
         Button closeButton = new Button("Close");
         closeButton.setStyle("-fx-font-size: 14px;");
         closeButton.setPrefWidth(150);
         closeButton.setOnAction(e -> close());
 
-        HBox buttonBox = new HBox(10, printButton, saveButton, closeButton);
+        HBox buttonBox = new HBox(10, printButton, closeButton);
         buttonBox.setAlignment(Pos.CENTER);
 
-        mainLayout.getChildren().addAll(headerBox, sep1, receiptTextArea, sep2, buttonBox);
+        mainLayout.getChildren().addAll(headerBox, sep1, receiptTextArea, sep2, infoLabel, buttonBox);
 
         Scene scene = new Scene(mainLayout, 600, 700);
         setScene(scene);
     }
 
-    /**
-     * Generates the formatted receipt text.
-     *
-     * @return the receipt text
-     */
     private String generateReceiptText() {
         StringBuilder sb = new StringBuilder();
 
@@ -167,9 +155,6 @@ public class ReceiptView extends Stage {
         return sb.toString();
     }
 
-    /**
-     * Handles printing the receipt.
-     */
     private void handlePrint() {
         // In a real application, this would send to a printer
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -179,26 +164,6 @@ public class ReceiptView extends Stage {
         alert.showAndWait();
     }
 
-    /**
-     * Handles saving the receipt to file.
-     */
-    private void handleSave() {
-        receipt.saveToFile();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Saved");
-        alert.setHeaderText("Receipt Saved");
-        alert.setContentText("Receipt saved to file:\nreceipt_" +
-                transaction.getTransactionID() + ".txt");
-        alert.showAndWait();
-    }
-
-    /**
-     * Truncates a string to specified length.
-     *
-     * @param str the string to truncate
-     * @param maxLength the maximum length
-     * @return the truncated string
-     */
     private String truncate(String str, int maxLength) {
         if (str.length() <= maxLength) {
             return str;
@@ -206,13 +171,6 @@ public class ReceiptView extends Stage {
         return str.substring(0, maxLength - 3) + "...";
     }
 
-    /**
-     * Gets the transaction from receipt using reflection.
-     * This is a workaround since Receipt class has private transaction field.
-     *
-     * @param receipt the receipt
-     * @return the transaction
-     */
     private Transaction getTransactionFromReceipt(Receipt receipt) {
         try {
             java.lang.reflect.Field field = Receipt.class.getDeclaredField("transaction");

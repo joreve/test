@@ -9,8 +9,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
- * EmployeeView displays the employee dashboard with inventory management.
- * Updated with improved UI organization and collapsible alert panels.
+ * EmployeeView displays the employee dashboard with inventory management tabs.
+ * NO business logic - only UI display and user input capture.
  *
  * @author Joreve P. De Jesus
  */
@@ -22,14 +22,25 @@ public class EmployeeView extends BorderPane {
     private TabPane mainCategoryTabs;
     private TitledPane lowStockPane;
     private TitledPane expiryAlertPane;
+    private TextArea salesArea; // Store reference for refresh
     private int currentMainTabIndex = 0;
     private Map<String, Integer> subTabIndices = new HashMap<>();
     
-    public EmployeeView(ConvenienceStore store, Employee employee, EmployeeController controller) {
+    public EmployeeView(ConvenienceStore store, Employee employee) {
         this.store = store;
         this.employee = employee;
-        this.controller = controller;
         initializeUI();
+    }
+    
+    /**
+     * Injects the controller after view creation.
+     */
+    public void setController(EmployeeController controller) {
+        this.controller = controller;
+        // Now that controller is set, load the sales data
+        if (salesArea != null) {
+            refreshSalesDisplay(salesArea);
+        }
     }
     
     private void initializeUI() {
@@ -66,7 +77,11 @@ public class EmployeeView extends BorderPane {
         
         Button logoutButton = new Button("Logout");
         logoutButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
-        logoutButton.setOnAction(e -> controller.handleLogout());
+        logoutButton.setOnAction(e -> {
+            if (controller != null) {
+                controller.handleLogout();
+            }
+        });
         
         topBar.getChildren().addAll(titleLabel, spacer, employeeLabel, logoutButton);
         return topBar;
@@ -87,7 +102,7 @@ public class EmployeeView extends BorderPane {
         alertAccordion.getPanes().addAll(lowStockPane, expiryAlertPane);
         alertAccordion.setMaxHeight(200);
         
-        // Main category tabs (Food, Beverages)
+        // Main category tabs
         mainCategoryTabs = new TabPane();
         mainCategoryTabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         VBox.setVgrow(mainCategoryTabs, Priority.ALWAYS);
@@ -99,7 +114,6 @@ public class EmployeeView extends BorderPane {
             mainCategoryTabs.getTabs().add(mainTab);
         }
         
-        // Track tab changes
         mainCategoryTabs.getSelectionModel().selectedIndexProperty().addListener((obs, oldVal, newVal) -> {
             currentMainTabIndex = newVal.intValue();
         });
@@ -195,7 +209,6 @@ public class EmployeeView extends BorderPane {
             subTabPane.getTabs().add(subTab);
         }
         
-        // Track sub-tab changes
         subTabPane.getSelectionModel().selectedIndexProperty().addListener((obs, oldVal, newVal) -> {
             subTabIndices.put(mainCategory, newVal.intValue());
         });
@@ -285,7 +298,11 @@ public class EmployeeView extends BorderPane {
         Button removeButton = new Button("Remove");
         removeButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
         removeButton.setPrefWidth(100);
-        removeButton.setOnAction(e -> controller.handleRemoveProduct(product));
+        removeButton.setOnAction(e -> {
+            if (controller != null) {
+                controller.handleRemoveProduct(product);
+            }
+        });
         
         HBox buttonBox = new HBox(5, restockButton, editButton);
         buttonBox.setAlignment(Pos.CENTER);
@@ -327,7 +344,11 @@ public class EmployeeView extends BorderPane {
         });
         
         Optional<Integer> result = dialog.showAndWait();
-        result.ifPresent(quantity -> controller.handleRestock(product, quantity));
+        result.ifPresent(quantity -> {
+            if (controller != null) {
+                controller.handleRestock(product, quantity);
+            }
+        });
     }
     
     private void showEditDialog(Product product) {
@@ -407,7 +428,11 @@ public class EmployeeView extends BorderPane {
         });
         
         Optional<Product> result = dialog.showAndWait();
-        result.ifPresent(updatedProduct -> controller.handleEditProduct(updatedProduct));
+        result.ifPresent(updatedProduct -> {
+            if (controller != null) {
+                controller.handleEditProduct(updatedProduct);
+            }
+        });
     }
     
     private VBox createAddProductView() {
@@ -464,6 +489,8 @@ public class EmployeeView extends BorderPane {
         addButton.setPrefHeight(40);
         
         addButton.setOnAction(e -> {
+            if (controller == null) return;
+            
             try {
                 int id = Integer.parseInt(idField.getText());
                 String name = nameField.getText();
@@ -478,9 +505,7 @@ public class EmployeeView extends BorderPane {
                 controller.handleAddProduct(id, name, price, stock, catParts[0], catParts[1], 
                                           brand, variant, expDate);
                 
-                statusLabel.setText("Product added successfully!");
-                statusLabel.setStyle("-fx-text-fill: green;");
-                
+                // Clear fields after successful add
                 idField.clear();
                 nameField.clear();
                 priceField.clear();
@@ -488,6 +513,7 @@ public class EmployeeView extends BorderPane {
                 brandField.clear();
                 variantField.clear();
                 expDatePicker.setValue(null);
+                statusLabel.setText("");
                 
             } catch (NumberFormatException ex) {
                 statusLabel.setText("Error: Invalid number format");
@@ -509,42 +535,31 @@ public class EmployeeView extends BorderPane {
         Label titleLabel = new Label("Sales History");
         titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         
-        TextArea salesArea = new TextArea();
+        salesArea = new TextArea();
         salesArea.setEditable(false);
         salesArea.setFont(Font.font("Courier New", 12));
         salesArea.setPrefRowCount(30);
         
-        StringBuilder sb = new StringBuilder();
-        sb.append("SALES HISTORY\n");
-        sb.append("=".repeat(80)).append("\n\n");
-        
-        List<String> transactions = controller.getDataManager().loadTransactions();
-        
-        if (transactions.isEmpty()) {
-            sb.append("No transactions yet.\n");
-        } else {
-            for (String transaction : transactions) {
-                String[] parts = transaction.split("\\|\\|\\|");
-                if (parts.length >= 4) {
-                    sb.append(String.format("Transaction ID: %s\n", parts[0]));
-                    sb.append(String.format("Customer: %s\n", parts[1]));
-                    sb.append(String.format("Total: ₱%.2f\n", Double.parseDouble(parts[2])));
-                    sb.append(String.format("Date: %s\n", parts[3]));
-                    sb.append("-".repeat(80)).append("\n");
-                }
-            }
-        }
-        
-        salesArea.setText(sb.toString());
+        // Don't load data yet - wait for controller to be injected
+        salesArea.setText("Loading sales data...");
         
         Button refreshButton = new Button("Refresh");
-        refreshButton.setOnAction(e -> refreshSales(salesArea));
+        refreshButton.setOnAction(e -> {
+            if (controller != null) {
+                refreshSalesDisplay(salesArea);
+            }
+        });
         
         salesBox.getChildren().addAll(titleLabel, salesArea, refreshButton);
         return salesBox;
     }
     
-    private void refreshSales(TextArea salesArea) {
+    private void refreshSalesDisplay(TextArea salesArea) {
+        if (controller == null) {
+            salesArea.setText("Controller not initialized");
+            return;
+        }
+        
         StringBuilder sb = new StringBuilder();
         sb.append("SALES HISTORY\n");
         sb.append("=".repeat(80)).append("\n\n");
@@ -569,9 +584,6 @@ public class EmployeeView extends BorderPane {
         salesArea.setText(sb.toString());
     }
     
-    /**
-     * Gets all available categories from existing shelves.
-     */
     private List<String> getAllCategories() {
         Set<String> categories = new LinkedHashSet<>();
         
@@ -585,15 +597,14 @@ public class EmployeeView extends BorderPane {
     
     /**
      * Refreshes the entire inventory display.
+     * Called by controller after inventory changes.
      */
     public void refreshInventory() {
-        // Save current tab positions
         String currentMainCategory = null;
         if (currentMainTabIndex >= 0 && currentMainTabIndex < mainCategoryTabs.getTabs().size()) {
             currentMainCategory = mainCategoryTabs.getTabs().get(currentMainTabIndex).getText();
         }
         
-        // Clear and rebuild
         mainCategoryTabs.getTabs().clear();
         
         Map<String, Map<String, List<Product>>> organizedProducts = organizeProductsByCategory();
@@ -603,13 +614,11 @@ public class EmployeeView extends BorderPane {
             mainCategoryTabs.getTabs().add(mainTab);
         }
         
-        // Restore main tab position
         if (currentMainCategory != null) {
             for (int i = 0; i < mainCategoryTabs.getTabs().size(); i++) {
                 if (mainCategoryTabs.getTabs().get(i).getText().equals(currentMainCategory)) {
                     mainCategoryTabs.getSelectionModel().select(i);
                     
-                    // Restore sub-tab position
                     Integer subTabIndex = subTabIndices.get(currentMainCategory);
                     if (subTabIndex != null) {
                         TabPane subTabPane = (TabPane) mainCategoryTabs.getTabs().get(i).getContent();
@@ -622,8 +631,23 @@ public class EmployeeView extends BorderPane {
             }
         }
         
-        // Refresh alerts
+        // Refresh alerts with updated counts
+        lowStockPane.setText("⚠️ Low Stock Alerts (" + store.getInventory().flagLowStock().size() + ")");
         lowStockPane.setContent(createLowStockAlert().getContent());
+        
+        expiryAlertPane.setText("📅 Expiration Alerts (" + store.getInventory().flagExpiringProducts(15).size() + ")");
         expiryAlertPane.setContent(createExpiryAlert().getContent());
+    }
+    
+    /**
+     * Shows success message after adding product.
+     * Called by controller.
+     */
+    public void showAddProductSuccess() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Product added successfully!");
+        alert.showAndWait();
     }
 }

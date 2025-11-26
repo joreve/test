@@ -6,13 +6,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * LoginView displays the login interface for customers and employees.
- * Provides options to login or register new accounts.
+ * LoginView displays the login interface.
+ * NO controller creation - controller is injected by MainApplication.
  *
  * @author Dana Ysabelle A. Pelagio and Joreve P. De Jesus
  */
 public class LoginView extends BorderPane {
-    private LoginController controller;
+    private AuthenticationController controller;
     
     private TextField usernameField;
     private PasswordField passwordField;
@@ -21,19 +21,17 @@ public class LoginView extends BorderPane {
     private Button registerButton;
     private Label statusLabel;
     
-    /**
-     * Constructs a LoginView with the specified controller.
-     *
-     * @param controller the login controller
-     */
-    public LoginView(LoginController controller) {
-        this.controller = controller;
+    public LoginView() {
         initializeUI();
     }
     
     /**
-     * Initializes the user interface.
+     * Injects the controller after view creation.
      */
+    public void setController(AuthenticationController controller) {
+        this.controller = controller;
+    }
+    
     private void initializeUI() {
         setStyle("-fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);");
         
@@ -112,7 +110,7 @@ public class LoginView extends BorderPane {
                                "-fx-font-size: 14px;");
         registerButton.setPrefWidth(350);
         registerButton.setPrefHeight(40);
-        registerButton.setOnAction(e -> handleRegister());
+        registerButton.setOnAction(e -> controller.handleShowRegister());
         
         formBox.getChildren().addAll(
             formTitle,
@@ -132,34 +130,17 @@ public class LoginView extends BorderPane {
         setCenter(centerPane);
     }
     
-    /**
-     * Handles the login button click.
-     */
     private void handleLogin() {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
         String userType = userTypeCombo.getValue();
         
-        if (username.isEmpty() || password.isEmpty()) {
-            showStatus("Please enter username and password", "error");
-            return;
-        }
-        
         controller.handleLogin(username, password, userType);
     }
     
     /**
-     * Handles the register button click.
-     */
-    private void handleRegister() {
-        controller.handleShowRegister();
-    }
-    
-    /**
      * Shows a status message.
-     *
-     * @param message the message to display
-     * @param type "success", "error", or "info"
+     * Called by controller.
      */
     public void showStatus(String message, String type) {
         statusLabel.setText(message);

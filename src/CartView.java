@@ -6,35 +6,35 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * CartView displays the shopping cart contents with options to
- * modify quantities, remove items, and proceed to checkout.
+ * CartView displays the shopping cart contents.
+ * Shows items with options to modify quantities, remove items, and proceed to checkout.
+ * NO business logic - only UI display and capturing user actions.
  *
  * @author Dana Ysabelle A. Pelagio
  */
 public class CartView extends BorderPane {
     private Cart cart;
+    private CartController controller;
+    
     private ListView<HBox> cartListView;
     private Label subtotalLabel;
     private Label itemCountLabel;
     private Button checkoutButton;
     private Button clearCartButton;
+    private Button backButton;
 
-    private CartController controller;
-
-    /**
-     * Constructs a CartView for the specified cart.
-     *
-     * @param cart the shopping cart to display
-     */
     public CartView(Cart cart) {
         this.cart = cart;
-        this.controller = new CartController(cart, this);
         initializeUI();
     }
-
+    
     /**
-     * Initializes the user interface components.
+     * Injects the controller after view creation.
      */
+    public void setController(CartController controller) {
+        this.controller = controller;
+    }
+
     private void initializeUI() {
         // Top: Title
         Label titleLabel = new Label("Shopping Cart");
@@ -55,7 +55,7 @@ public class CartView extends BorderPane {
         cartListView.setPrefHeight(400);
         setCenter(cartListView);
 
-        // Bottom: Subtotal and Buttons
+        // Bottom: Controls
         subtotalLabel = new Label("Subtotal: ₱0.00");
         subtotalLabel.setFont(Font.font("Arial", FontWeight.BOLD, 18));
 
@@ -68,8 +68,12 @@ public class CartView extends BorderPane {
         clearCartButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px;");
         clearCartButton.setPrefWidth(150);
         clearCartButton.setOnAction(e -> controller.handleClearCart());
+        
+        backButton = new Button("← Back to Shopping");
+        backButton.setStyle("-fx-font-size: 14px;");
+        backButton.setOnAction(e -> controller.handleBackToShopping());
 
-        HBox buttonBox = new HBox(15, clearCartButton, checkoutButton);
+        HBox buttonBox = new HBox(15, backButton, clearCartButton, checkoutButton);
         buttonBox.setAlignment(Pos.CENTER);
 
         VBox bottomBox = new VBox(15, subtotalLabel, buttonBox);
@@ -83,6 +87,7 @@ public class CartView extends BorderPane {
 
     /**
      * Refreshes the cart display with current items.
+     * Called by controller after cart modifications.
      */
     public void refreshCartDisplay() {
         cartListView.getItems().clear();
@@ -114,12 +119,6 @@ public class CartView extends BorderPane {
         subtotalLabel.setText(String.format("Subtotal: ₱%.2f", cart.computeSubtotal()));
     }
 
-    /**
-     * Creates a visual box for a single cart item.
-     *
-     * @param item the cart item to display
-     * @return HBox containing item details and controls
-     */
     private HBox createCartItemBox(CartItem item) {
         Product product = item.getProduct();
 
@@ -162,13 +161,5 @@ public class CartView extends BorderPane {
         itemBox.setStyle("-fx-border-color: #ddd; -fx-border-width: 0 0 1 0;");
 
         return itemBox;
-    }
-
-    public Button getCheckoutButton() {
-        return checkoutButton;
-    }
-
-    public Cart getCart() {
-        return cart;
     }
 }

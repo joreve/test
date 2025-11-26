@@ -1,50 +1,44 @@
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.stage.Stage;
 import java.time.LocalDate;
 
 /**
- * EmployeeController manages employee interactions with the inventory system.
- * Handles product management, restocking, and sales history operations.
+ * EmployeeController manages inventory operations.
+ * Handles product management, restocking, and sales history.
  *
  * @author Joreve P. De Jesus
  */
 public class EmployeeController {
-    private Stage primaryStage;
     private ConvenienceStore store;
     private Employee employee;
-    private MainApplication mainApp;
     private DataManager dataManager;
-    private EmployeeView employeeView;
+    private MainApplication mainApp;
+    private EmployeeView view;
     
-    public EmployeeController(Stage primaryStage, ConvenienceStore store, 
-                             Employee employee, MainApplication mainApp, DataManager dataManager) {
-        this.primaryStage = primaryStage;
+    public EmployeeController(ConvenienceStore store, Employee employee,
+                             DataManager dataManager, MainApplication mainApp) {
         this.store = store;
         this.employee = employee;
-        this.mainApp = mainApp;
         this.dataManager = dataManager;
+        this.mainApp = mainApp;
     }
     
-    /**
-     * Shows the employee dashboard view.
-     */
-    public void showEmployeeView() {
-        employeeView = new EmployeeView(store, employee, this);
-        Scene employeeScene = new Scene(employeeView);
-        
-        primaryStage.setScene(employeeScene);
-        primaryStage.setTitle("Employee Dashboard - " + employee.getName());
+    public void setView(EmployeeView view) {
+        this.view = view;
     }
     
     /**
      * Handles restocking a product.
      */
     public void handleRestock(Product product, int quantity) {
+        if (quantity <= 0) {
+            showAlert("Invalid Quantity", "Please enter a positive quantity.", Alert.AlertType.WARNING);
+            return;
+        }
+        
         employee.restockItem(store.getInventory(), product, quantity);
         dataManager.saveProducts(store.getInventory().getProducts());
-        employeeView.refreshInventory();
+        view.refreshInventory();
         showAlert("Success", "Product restocked successfully!", Alert.AlertType.INFORMATION);
     }
     
@@ -54,7 +48,7 @@ public class EmployeeController {
     public void handleEditProduct(Product updatedProduct) {
         employee.updateProductInfo(store.getInventory(), updatedProduct);
         dataManager.saveProducts(store.getInventory().getProducts());
-        employeeView.refreshInventory();
+        view.refreshInventory();
         showAlert("Success", "Product updated successfully!", Alert.AlertType.INFORMATION);
     }
     
@@ -71,7 +65,7 @@ public class EmployeeController {
             if (response == ButtonType.OK) {
                 store.getInventory().removeProduct(product.getProductID());
                 dataManager.saveProducts(store.getInventory().getProducts());
-                employeeView.refreshInventory();
+                view.refreshInventory();
                 showAlert("Success", "Product removed successfully!", Alert.AlertType.INFORMATION);
             }
         });
@@ -83,18 +77,36 @@ public class EmployeeController {
     public void handleAddProduct(int id, String name, double price, int stock, 
                                 String mainCategory, String subCategory, 
                                 String brand, String variant, LocalDate expDate) {
+        // Validate inputs
+        if (name == null || name.trim().isEmpty()) {
+            showAlert("Error", "Product name is required.", Alert.AlertType.ERROR);
+            return;
+        }
+        
+        if (price < 0) {
+            showAlert("Error", "Price cannot be negative.", Alert.AlertType.ERROR);
+            return;
+        }
+        
+        if (stock < 0) {
+            showAlert("Error", "Stock cannot be negative.", Alert.AlertType.ERROR);
+            return;
+        }
+        
         if (store.getInventory().productExists(id)) {
             showAlert("Error", "Product ID already exists!", Alert.AlertType.ERROR);
             return;
         }
         
+        // Create product
         Category category = new Category(mainCategory, subCategory);
         Product product = new Product(id, name, price, stock, category, brand, variant, expDate);
         
+        // Add to inventory
         employee.addProduct(store.getInventory(), product);
         dataManager.saveProducts(store.getInventory().getProducts());
         
-        // Add product to appropriate shelf
+        // Add to appropriate shelf
         boolean shelfFound = false;
         for (Shelf shelf : store.getInventory().getShelves()) {
             if (shelf.getCategory().getName().equals(category.getName()) &&
@@ -112,8 +124,8 @@ public class EmployeeController {
             store.getInventory().addShelf(newShelf);
         }
         
-        employeeView.refreshInventory();
-        showAlert("Success", "Product added successfully!", Alert.AlertType.INFORMATION);
+        view.refreshInventory();
+        view.showAddProductSuccess();
     }
     
     /**
@@ -133,17 +145,17 @@ public class EmployeeController {
     }
     
     /**
-     * Shows an alert dialog.
+     * Gets the DataManager for sales history loading.
      */
+    public DataManager getDataManager() {
+        return dataManager;
+    }
+    
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-    
-    public DataManager getDataManager() {
-        return dataManager;
     }
 }

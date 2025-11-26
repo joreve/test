@@ -1,38 +1,43 @@
 import javafx.scene.control.Alert;
 
 /**
- * CheckoutController handles the checkout process including
- * payment validation, discount application, and transaction creation.
+ * CheckoutController handles the payment process.
+ * Manages pricing calculations, discounts, membership cards, and transaction completion.
+ * ALL business logic moved here from CheckoutView.
  *
- * @author Dana Ysabelle A. Pelagio
+ * @author Dana Ysabelle A. Pelagio and Joreve P. De Jesus
  */
 public class CheckoutController {
     private Customer customer;
     private Cart cart;
-    private CheckoutView checkoutView;
+    private ConvenienceStore store;
+    private DataManager dataManager;
+    private MainApplication mainApp;
+    private CheckoutView view;
 
-    private double currentTotal;
+    // Current pricing state
     private double currentSubtotal;
     private double currentDiscount;
     private double currentVAT;
+    private double currentTotal;
 
-    /**
-     * Constructs a CheckoutController.
-     *
-     * @param customer the customer checking out
-     * @param cart the shopping cart
-     * @param checkoutView the checkout view
-     */
-    public CheckoutController(Customer customer, Cart cart, CheckoutView checkoutView) {
+    public CheckoutController(Customer customer, Cart cart, ConvenienceStore store,
+                             DataManager dataManager, MainApplication mainApp) {
         this.customer = customer;
         this.cart = cart;
-        this.checkoutView = checkoutView;
+        this.store = store;
+        this.dataManager = dataManager;
+        this.mainApp = mainApp;
+    }
+    
+    public void setView(CheckoutView view) {
+        this.view = view;
+        // Initial calculation when view is set
+        recalculatePricing();
     }
 
     /**
      * Applies a membership card to the customer.
-     *
-     * @param cardNumber the card number to apply
      */
     public void handleApplyMembershipCard(String cardNumber) {
         if (cardNumber == null || cardNumber.trim().isEmpty()) {
@@ -40,69 +45,69 @@ public class CheckoutController {
             return;
         }
 
-        // In a real system, you'd validate this against a database
-        // For now, we'll just create a new card
+        // Create and apply membership card
         MembershipCard card = new MembershipCard(cardNumber.trim());
         customer.setMembershipCard(card);
 
         showAlert("Card Applied", "Membership card successfully applied!", Alert.AlertType.INFORMATION);
-        checkoutView.refreshDisplay();
+        view.updateMembershipDisplay();
+        recalculatePricing();
     }
 
     /**
-     * Recalculates the total with current discounts and settings.
+     * Recalculates pricing with current discounts and settings.
+     * This is where ALL pricing logic lives.
      */
-    public void handleRecalculate() {
+    public void recalculatePricing() {
         currentSubtotal = cart.computeSubtotal();
         currentDiscount = 0.0;
 
-        // Apply senior discount first (if applicable)
-        double afterSeniorDiscount = currentSubtotal;
-        if (checkoutView.isSeniorDiscount()) {
-            afterSeniorDiscount = DiscountPolicy.applySeniorDiscount(currentSubtotal);
-            currentDiscount += (currentSubtotal - afterSeniorDiscount);
+        double afterDiscount = currentSubtotal;
+
+        // Apply senior discount first (if selected)
+        if (view.isSeniorDiscountSelected()) {
+            double seniorDiscounted = DiscountPolicy.applySeniorDiscount(afterDiscount);
+            currentDiscount += (afterDiscount - seniorDiscounted);
+            afterDiscount = seniorDiscounted;
         }
 
-        // Apply membership points discount
-        double afterMembershipDiscount = afterSeniorDiscount;
-        if (checkoutView.isUseMembershipPoints() && customer.hasMembershipCard()) {
+        // Apply membership points discount (if selected and available)
+        if (view.isUseMembershipPointsSelected() && customer.hasMembershipCard()) {
             MembershipCard card = customer.getMembershipCard();
-            double pointsDiscount = Math.min(card.getDiscount(), afterSeniorDiscount);
-            afterMembershipDiscount = afterSeniorDiscount - pointsDiscount;
+            double pointsDiscount = Math.min(card.getDiscount(), afterDiscount);
             currentDiscount += pointsDiscount;
+            afterDiscount -= pointsDiscount;
         }
 
         // Calculate VAT
-        currentVAT = DiscountPolicy.calculateVAT(afterMembershipDiscount);
+        currentVAT = DiscountPolicy.calculateVAT(afterDiscount);
 
         // Calculate final total
-        currentTotal = afterMembershipDiscount + currentVAT;
+        currentTotal = afterDiscount + currentVAT;
 
-        // Update display
-        checkoutView.updatePriceLabels(currentSubtotal, currentDiscount, currentVAT, currentTotal);
+        // Update view display
+        view.displayPricing(currentSubtotal, currentDiscount, currentVAT, currentTotal);
     }
 
     /**
-     * Handles amount received field changes to show change.
-     *
-     * @param amountText the amount text entered
+     * Handles amount received field changes to calculate change.
      */
     public void handleAmountChanged(String amountText) {
         try {
             double amount = Double.parseDouble(amountText);
             double change = amount - currentTotal;
-            checkoutView.updateChangeLabel(change);
+            view.displayChange(change);
         } catch (NumberFormatException e) {
-            checkoutView.updateChangeLabel(-1); // Shows insufficient payment
+            view.displayChange(-1); // Indicates insufficient/invalid
         }
     }
 
     /**
-     * Processes the payment and creates a transaction.
+     * Processes the payment and completes the transaction.
      */
     public void handleProcessPayment() {
         // Validate amount received
-        String amountText = checkoutView.getAmountReceived();
+        String amountText = view.getAmountReceived();
         if (amountText == null || amountText.trim().isEmpty()) {
             showAlert("Invalid Payment", "Please enter payment amount.", Alert.AlertType.WARNING);
             return;
@@ -127,16 +132,12 @@ public class CheckoutController {
         // Create payment object
         Payment payment = new Payment(amountReceived, currentTotal);
 
-        // Create transaction
-        Transaction transaction = customer.checkOut(null); // Store will be passed by main controller
-        transaction.setPayment(payment);
-
-        // Update membership points if card is used
+        // Update membership card if used
         if (customer.hasMembershipCard()) {
             MembershipCard card = customer.getMembershipCard();
 
             // Redeem points if used
-            if (checkoutView.isUseMembershipPoints()) {
+            if (view.isUseMembershipPointsSelected()) {
                 int pointsToRedeem = Math.min(card.getPoints(), (int)currentDiscount);
                 card.redeemPoints(pointsToRedeem);
             }
@@ -145,43 +146,43 @@ public class CheckoutController {
             card.addPoints(currentTotal);
         }
 
-        // Generate receipt
-        Receipt receipt = transaction.generateReceipt();
+        // Create transaction
+        Transaction transaction = customer.checkOut(store);
+        transaction.setPayment(payment);
 
-        // Show receipt in new window
-        showReceiptWindow(receipt);
+        // Save everything
+        if (customer.hasMembershipCard()) {
+            dataManager.updateCustomer(customer);
+        }
+        dataManager.saveProducts(store.getInventory().getProducts());
+        dataManager.saveTransaction(transaction);
+
+        // Generate and save receipt
+        Receipt receipt = transaction.generateReceipt();
+        receipt.setDataManager(dataManager);
+        receipt.saveToFile();
+
+        // Show receipt window
+        ReceiptView receiptView = new ReceiptView(receipt);
+        receiptView.show();
 
         // Success message
         showAlert("Payment Successful",
-                String.format("Change: ₱%.2f\nReceipt saved to file.", payment.computeChange()),
+                String.format("Change: ₱%.2f\nReceipt saved automatically.\nThank you for shopping!",
+                        payment.computeChange()),
                 Alert.AlertType.INFORMATION);
+
+        // Return to shopping view
+        mainApp.showCustomerView();
     }
 
     /**
-     * Shows the receipt in a new window.
-     *
-     * @param receipt the receipt to display
-     */
-    private void showReceiptWindow(Receipt receipt) {
-        // This will be implemented by creating ReceiptView, temporary muna
-        receipt.saveToFile();
-        receipt.display();
-    }
-
-    /**
-     * Handles going back to the cart view.
+     * Handles going back to cart.
      */
     public void handleBack() {
-        System.out.println("Going back to cart...");
+        mainApp.showCartView();
     }
 
-    /**
-     * Shows an alert dialog.
-     *
-     * @param title the alert title
-     * @param message the alert message
-     * @param type the alert type
-     */
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
